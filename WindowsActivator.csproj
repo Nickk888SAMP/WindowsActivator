@@ -67,7 +67,7 @@
     <Compile Include="Classes\GenericWindowsKeys.cs" />
     <Compile Include="Classes\RegistryHandler.cs" />
     <Compile Include="Enums\Enums.cs" />
-    <Compile Include="HWID.cs" />
+    <Compile Include="Classes\HWID.cs" />
     <Compile Include="Classes\Misc.cs" />
     <Compile Include="Classes\Paths.cs" />
     <Compile Include="Structs\ProductData.cs" />
