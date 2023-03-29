@@ -8,7 +8,7 @@ namespace WindowsActivator
     {
         static void Main(string[] args)
         {
-            new HWID().Run();
+            new Activator().Run();
         }
     }
 }

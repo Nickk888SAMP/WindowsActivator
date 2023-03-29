@@ -64,10 +64,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\CommandHandler.cs" />
     <Compile Include="Classes\GenericWindowsKeys.cs" />
     <Compile Include="Classes\RegistryHandler.cs" />
-    <Compile Include="Enums\Enums.cs" />
-    <Compile Include="Classes\HWID.cs" />
+    <Compile Include="Classes\Activator.cs" />
     <Compile Include="Classes\Misc.cs" />
     <Compile Include="Classes\Paths.cs" />
     <Compile Include="Structs\ProductData.cs" />

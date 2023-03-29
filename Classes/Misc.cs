@@ -4,38 +4,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Security.Principal;
+using WindowsActivator.Classes;
 
 namespace WindowsActivator
 {
     static class Misc
     {
-
-        public static string RunCommand(Enums.CommandHandler commandHandler, string command)
-        {
-            ProcessStartInfo psi = new ProcessStartInfo
-            {
-                FileName = commandHandler == Enums.CommandHandler.CMD ? Paths.cmdPath : Paths.powerShellPath,
-                Arguments = commandHandler == Enums.CommandHandler.CMD ? ("/c " + command) : command,
-                RedirectStandardOutput = true,
-                UseShellExecute = false
-            };
-
-            Process ps = new Process
-            {
-                StartInfo = psi,
-            };
-
-            ps.Start();
-
-            string output = ps.StandardOutput.ReadToEnd();
-            ps.WaitForExit();
-
-            return output;
-        }
-
         static public Stream CreateFile(string fileName, out string filePath)
         {
-            filePath = $@"{Paths.applicationWorkDirectory}\{fileName}";
+            filePath = $@"{Paths.GetPath(Paths.Path.WorkDirectory)}\{fileName}";
             using (Stream s = File.Create(filePath))
             {
                 return s;
@@ -113,33 +90,33 @@ namespace WindowsActivator
 
         static public void CleanUpWorkSpace()
         {
-            Directory.Delete(Paths.applicationWorkDirectory, true);
+            Directory.Delete(Paths.GetPath(Paths.Path.WorkDirectory), true);
         }
 
         static public string GetWindowsArch()
         {
-            return RegistryHandler.GetRegistryStringValue(Enums.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", "PROCESSOR_ARCHITECTURE");
+            return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", "PROCESSOR_ARCHITECTURE");
         }
 
         static public bool IsSystemPermanentActivated()
         {
-            string output = RunCommand(Enums.CommandHandler.CMD, $"{Paths.wmicPath} path SoftwareLicensingProduct where(LicenseStatus= '1' and GracePeriodRemaining = '0' and PartialProductKey is not NULL) get Name /value 2> nul");
+            string output = CommandHandler.RunCommand(CommandHandler.CommandType.CMD, $"{Paths.GetPath(Paths.Path.WMIC)} path SoftwareLicensingProduct where(LicenseStatus= '1' and GracePeriodRemaining = '0' and PartialProductKey is not NULL) get Name /value 2> nul");
             return output.Contains("Windows");
         }
 
         static public string GetProductName()
         {
-            return RegistryHandler.GetRegistryStringValue(Enums.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
+            return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
         }
 
         static public string GetEditionID()
         {
-            return RegistryHandler.GetRegistryStringValue(Enums.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "EditionID");
+            return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "EditionID");
         }
 
         static public string GetProductPfn()
         {
-            return RegistryHandler.GetRegistryStringValue(Enums.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\ProductOptions", "OSProductPfn");
+            return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\ProductOptions", "OSProductPfn");
         }
     }
 }

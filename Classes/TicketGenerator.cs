@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using WindowsActivator.Classes;
 
 namespace WindowsActivator
 {
@@ -11,11 +12,10 @@ namespace WindowsActivator
         static public bool GenerateGenuineTicket(string productPfn)
         {
             CreateTicketGenerator(out string generatorPath);
-
             string generateCommand = $@"{generatorPath} /c Pfn={productPfn}`;DownlevelGenuineState=1";
-            Misc.RunCommand(Enums.CommandHandler.PowerShell, generateCommand);
+            CommandHandler.RunCommand(CommandHandler.CommandType.PowerShell, generateCommand);
 
-            if (File.Exists(Paths.applicationWorkDirectory + @"\GenuineTicket.xml"))
+            if (File.Exists(Paths.GetPath(Paths.Path.WorkDirectory) + @"\GenuineTicket.xml"))
             {
                 return true;
             }
@@ -33,7 +33,7 @@ namespace WindowsActivator
                 stream.CopyTo(s);
                 s.Dispose();
 
-                RegistryHandler.CreateRegistrySubKeyEntry(Enums.RegistryRootKey.CURRENT_USER,
+                RegistryHandler.CreateRegistrySubKeyEntry(RegistryHandler.RegistryRootKey.CURRENT_USER,
                     @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers",
                     generatorPath,
                     "WINXPSP3",
