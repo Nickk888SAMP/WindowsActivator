@@ -28,7 +28,6 @@ namespace WindowsActivator
             string resourceName = "WindowsActivator.Resources.TicketGeneratorBinary";
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
-                Debug.WriteLine(stream.ToString());
                 Misc.CreateFile("gtg.exe", out generatorPath);
                 Stream s = File.Open(generatorPath, FileMode.Open, FileAccess.Write);
                 stream.CopyTo(s);

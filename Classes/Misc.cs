@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Security.Principal;
+
 namespace WindowsActivator
 {
     static class Misc

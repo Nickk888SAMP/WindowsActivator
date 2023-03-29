@@ -63,14 +63,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GenericWindowsKeys.cs" />
+    <Compile Include="Classes\GenericWindowsKeys.cs" />
     <Compile Include="HWID.cs" />
-    <Compile Include="Misc.cs" />
-    <Compile Include="Paths.cs" />
-    <Compile Include="ProductData.cs" />
+    <Compile Include="Classes\Misc.cs" />
+    <Compile Include="Classes\Paths.cs" />
+    <Compile Include="Structs\ProductData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TicketGenerator.cs" />
+    <Compile Include="Classes\TicketGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
