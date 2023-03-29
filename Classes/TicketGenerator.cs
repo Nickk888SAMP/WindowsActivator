@@ -13,7 +13,7 @@ namespace WindowsActivator
             CreateTicketGenerator(out string generatorPath);
 
             string generateCommand = $@"{generatorPath} /c Pfn={productPfn}`;DownlevelGenuineState=1";
-            Misc.RunCommand(Misc.CommandHandler.PowerShell, generateCommand);
+            Misc.RunCommand(Enums.CommandHandler.PowerShell, generateCommand);
 
             if (File.Exists(Paths.applicationWorkDirectory + @"\GenuineTicket.xml"))
             {
@@ -33,7 +33,7 @@ namespace WindowsActivator
                 stream.CopyTo(s);
                 s.Dispose();
 
-                Misc.CreateRegistrySubKeyEntry(Misc.RegistryRootKey.CURRENT_USER,
+                RegistryHandler.CreateRegistrySubKeyEntry(Enums.RegistryRootKey.CURRENT_USER,
                     @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers",
                     generatorPath,
                     "WINXPSP3",

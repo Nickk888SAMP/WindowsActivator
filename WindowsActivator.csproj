@@ -55,6 +55,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,6 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\GenericWindowsKeys.cs" />
+    <Compile Include="Classes\RegistryHandler.cs" />
+    <Compile Include="Enums\Enums.cs" />
     <Compile Include="HWID.cs" />
     <Compile Include="Classes\Misc.cs" />
     <Compile Include="Classes\Paths.cs" />

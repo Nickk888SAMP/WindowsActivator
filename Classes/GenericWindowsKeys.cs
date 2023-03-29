@@ -4,7 +4,7 @@ namespace WindowsActivator
 {
     static class GenericWindowsKeys
     {
-        static private Dictionary<string, string> editionIdToKey = new Dictionary<string, string>
+        static private readonly Dictionary<string, string> editionIdToKey = new Dictionary<string, string>
         {
             { "Education", "YNMGQ-8RYV3-4PGQ3-C8XTP-7CFBY" },
             { "Education N", "84NGF-MHBT6-FXBX8-QWJK7-DRR8H" },
