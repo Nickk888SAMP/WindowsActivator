@@ -49,7 +49,7 @@ namespace WindowsActivator
             return isElevated;
         }
 
-        static public bool IsOSAppAvailable(string appName, out string pathToApp)
+        static public bool GetSystemApplication(string appName, out string pathToApp)
         {
             pathToApp = null;
             string[] paths = Environment.GetEnvironmentVariable("PATH").Split(';');

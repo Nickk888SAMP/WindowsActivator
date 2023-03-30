@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using WindowsActivator.Classes;
 
@@ -25,10 +25,11 @@ namespace WindowsActivator
             // Gets the version of the application.
             string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
+            // Set working directory path
             Paths.SetPath(Paths.Path.WorkDirectory, Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\WindowsActivator");
 
             // Changes the title of the application.
-            Console.Title = $"HWID Windows Activation {version}";
+            Console.Title = $"HWID Windows Activation v. {version}";
 
             // Create working directory if not exists.
             if (!Directory.Exists(Paths.GetPath(Paths.Path.WorkDirectory)))
@@ -39,181 +40,179 @@ namespace WindowsActivator
             // Cheks if the OS is supported.
             if (!Misc.IsOSSupported(productData.Build))
             {
-                Console.WriteLine();
-                Console.WriteLine("Unsupported OS version detected.");
-                Console.WriteLine("HWID Activation is supported only for Windows 10/11.");
-                Console.WriteLine("Use Online KMS Activation option.");
+                Print.Write("\nUnsupported OS version detected.", ConsoleColor.DarkRed, ConsoleColor.White);
+                Print.Write("HWID Activation is supported only for Windows 10/11.", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
-                return;
             }
 
             // Checks if OS is a windows server
             if (Misc.IsWindowsServer())
             {
-                Console.WriteLine();
-                Console.WriteLine("HWID Activation is not supported for Windows Server.");
+                Print.Write("\nHWID Activation is not supported for Windows Server.", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
-                return;
             }
 
-            Console.BackgroundColor = ConsoleColor.White;
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine("Searching OS Apps");
-            Console.ResetColor();
+            // Searches for important system apps
+            Print.Write("Searching important system applications", ConsoleColor.White, ConsoleColor.Black);
+            CheckOSApps();
 
-            string path;
+            // Diagnoses the system before activate attempt
+            Print.Write("\nDiagnostic Tests", ConsoleColor.White, ConsoleColor.Black);
+            Diagnose();
+
+            // Tries to activate the system
+            Print.Write($"\nProceeding with activation...\n");
+            Activate();
+
+            // Ends
+            IsDone();
+        }
+
+        /// <summary>
+        /// Attemps to activate Windows
+        /// </summary>
+        private void Activate()
+        {
             string output;
             string command;
-
-            if (!Misc.IsOSAppAvailable("cmd.exe", out path))
-            {
-                Console.WriteLine();
-                Console.WriteLine("Unable to find cmd.exe in the system.");
-                IsDone();
-                return;
-            }
-            Paths.SetPath(Paths.Path.CMD, path);
-            Console.WriteLine($"CMD\t\t\t\t\t[Found]");
-
-            if (!Misc.IsOSAppAvailable("powershell.exe", out path))
-            {
-                Console.WriteLine();
-                Console.WriteLine("Unable to find powershell.exe in the system.");
-                IsDone();
-                return;
-            }
-            Paths.SetPath(Paths.Path.PowerShell, path);
-            Console.WriteLine($"Powershell\t\t\t\t[Found]");
-
-            if (!Misc.IsOSAppAvailable("slmgr.vbs", out path))
-            {
-                Console.WriteLine();
-                Console.WriteLine("Unable to find slmgr.vbs in the system.");
-                IsDone();
-                return;
-            }
-            Paths.SetPath(Paths.Path.SLMGR, path);
-            Console.WriteLine($"SLMGR\t\t\t\t\t[Found]");
-
-            if (!Misc.IsOSAppAvailable("cscript.exe", out path))
-            {
-                Console.WriteLine();
-                Console.WriteLine("Unable to find cscript.exe in the system.");
-                IsDone();
-                return;
-            }
-            Paths.SetPath(Paths.Path.CScript, path);
-            Console.WriteLine($"CScript\t\t\t\t\t[Found]");
-
-            if (!Misc.IsOSAppAvailable("ClipUp.exe", out path))
-            {
-                Console.WriteLine();
-                Console.WriteLine("Unable to find clipup.exe in the system.");
-                IsDone();
-                return;
-            }
-            Paths.SetPath(Paths.Path.ClipUp, path);
-            Console.WriteLine($"ClipUp\t\t\t\t\t[Found]");
-
-            if (!Misc.IsOSAppAvailable("wmic.exe", out path))
-            {
-                Console.WriteLine();
-                Console.WriteLine("Unable to find wmic.exe in the system.");
-                IsDone();
-                return;
-            }
-            Paths.SetPath(Paths.Path.WMIC, path);
-            Console.WriteLine($"WMIC\t\t\t\t\t[Found]");
-
-            Console.WriteLine();
-            Console.BackgroundColor = ConsoleColor.White;
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine("Diagnostic Tests");
-            Console.ResetColor();
-
-            if (!Misc.IsElevated())
-            {
-                Console.WriteLine();
-                Console.WriteLine("This application require administrator privileges.");
-                Console.WriteLine("To do so, right click on this application and select 'Run as administrator'.");
-                IsDone();
-                return;
-            }
-            Console.WriteLine($"Admin Priveleges\t\t\t[Yes]");
-
-            if (!Misc.IsInternetConnected())
-            {
-                Console.WriteLine();
-                Console.WriteLine("No Internet Connection. Please ensure a stable internet connection to activate windows.");
-                IsDone();
-                return;
-            }
-            Console.WriteLine("Internet Connection\t\t\t[Connected]");
-
-            Console.WriteLine($"OS Info\t\t\t\t\t[{productData.Name} | {productData.Build} | {productData.Architecture}]");
-
-            if (Misc.IsSystemPermanentActivated())
-            {
-                Console.WriteLine();
-                Console.WriteLine($"{productData.Name} is currently Permanently Activated.");
-                Console.WriteLine($"Activation is not required.");
-                IsDone();
-                return;
-            }
-            Console.WriteLine();
-            Console.WriteLine($"Proceeding with activation...");
-            Console.WriteLine();
-
+            
+            // Tries to get the generic product key from the provided Edition ID
             if (!GenericWindowsKeys.TryGetProductKey(productData.EditionID, out string productKey))
             {
-                Console.WriteLine("No product key Found!");
+                Print.Write("No product key Found!", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
-                return;
             }
 
+            // Tries to install the generic product key into the system
             command = $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /ipk {productKey}";
             output = CommandHandler.RunCommand(CommandHandler.CommandType.PowerShell, command);
             if (!output.Contains(productKey))
             {
-                Console.WriteLine("Generic product key couldn't be installed. Wrong product key?");
+                Print.Write("Generic product key couldn't be installed. Wrong product key?", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
-                return;
             }
-            Console.WriteLine("Generic Product Key\t\t\t[Installed]");
+            Print.Write("Generic Product Key\t\t\t[Installed]");
 
+            // Tries to generate a GenuineTicket.xml file
             if (!TicketGenerator.GenerateGenuineTicket(productData.PFN))
             {
-                Console.WriteLine("Genuine ticket couldn't be generated.");
+                Print.Write("Genuine ticket couldn't be generated.", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
-                return;
             }
-            Console.WriteLine("Genuine Ticket\t\t\t\t[Generated]");
+            Print.Write("Genuine Ticket\t\t\t\t[Generated]");
 
+            // Tries to convert the GenuineTicket.xml wih the product key and the HWID
             command = $"{Paths.GetPath(Paths.Path.ClipUp)} -v -o -altto {Paths.GetPath(Paths.Path.WorkDirectory)}";
             output = CommandHandler.RunCommand(CommandHandler.CommandType.PowerShell, command);
             if (output.Contains("Done."))
             {
-                Console.WriteLine("Genuine Ticket Conversion\t\t[Success]");
-                Console.WriteLine();
-                Console.WriteLine("Activating...");
-                Console.WriteLine();
+                Print.Write("Genuine Ticket Conversion\t\t[Success]");
+                Print.Write("\nActivating...\n");
                 CommandHandler.RunCommand(CommandHandler.CommandType.PowerShell, $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /ato");
 
+                // Checks if the system has been activated
                 if (Misc.IsSystemPermanentActivated())
                 {
-                    Console.BackgroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine($"{productData.Name} is permanently activated with a digital license.");
-                    Console.ResetColor();
+                    Print.Write($"{productData.Name} is permanently activated with a digital license.", ConsoleColor.DarkGreen, ConsoleColor.White);
                 }
                 else
                 {
-                    Console.BackgroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Activation Failed.");
-                    Console.ResetColor();
+                    Print.Write($"Activation Failed.", ConsoleColor.DarkRed, ConsoleColor.White);
                 }
             }
+        }
 
-            IsDone();
+        /// <summary>
+        /// Diagnoses the system 
+        /// </summary>
+        private void Diagnose()
+        {
+            if (!Misc.IsElevated())
+            {
+                Print.Write("\nThis application require administrator privileges.");
+                Print.Write("To do so, right click on this application and select 'Run as administrator'.");
+                IsDone();
+            }
+
+            Print.Write($"Admin Priveleges\t\t\t[Yes]");
+
+            if (!Misc.IsInternetConnected())
+            {
+                Print.Write("\nNo Internet Connection. Please ensure a stable internet connection to activate windows.");
+                IsDone();
+            }
+
+            Print.Write("Internet Connection\t\t\t[Connected]");
+            Print.Write($"OS Info\t\t\t\t\t[{productData.Name} | {productData.Build} | {productData.Architecture}]");
+
+            if (Misc.IsSystemPermanentActivated())
+            {
+                Print.Write($"\n{productData.Name} is currently Permanently Activated.", ConsoleColor.DarkYellow, ConsoleColor.White);
+                Print.Write($"Activation is not required.", ConsoleColor.DarkYellow, ConsoleColor.White);
+                IsDone();
+            }
+        }
+
+
+        /// <summary>
+        /// Checks for important System applications
+        /// </summary>
+        private void CheckOSApps()
+        {
+            string path;
+            if (!Misc.GetSystemApplication("cmd.exe", out path))
+            {
+                Print.Write();
+                Print.Write("Unable to find cmd.exe in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
+                IsDone();
+            }
+            Paths.SetPath(Paths.Path.CMD, path);
+            Print.Write($"CMD\t\t\t\t\t[Found]");
+
+            if (!Misc.GetSystemApplication("powershell.exe", out path))
+            {
+                Print.Write();
+                Print.Write("Unable to find powershell.exe in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
+                IsDone();
+            }
+            Paths.SetPath(Paths.Path.PowerShell, path);
+            Print.Write($"Powershell\t\t\t\t[Found]");
+
+            if (!Misc.GetSystemApplication("slmgr.vbs", out path))
+            {
+                Print.Write();
+                Print.Write("Unable to find slmgr.vbs in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
+                IsDone();
+            }
+            Paths.SetPath(Paths.Path.SLMGR, path);
+            Print.Write($"SLMGR\t\t\t\t\t[Found]");
+
+            if (!Misc.GetSystemApplication("cscript.exe", out path))
+            {
+                Print.Write();
+                Print.Write("Unable to find cscript.exe in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
+                IsDone();
+            }
+            Paths.SetPath(Paths.Path.CScript, path);
+            Print.Write($"CScript\t\t\t\t\t[Found]");
+
+            if (!Misc.GetSystemApplication("ClipUp.exe", out path))
+            {
+                Print.Write();
+                Print.Write("Unable to find clipup.exe in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
+                IsDone();
+            }
+            Paths.SetPath(Paths.Path.ClipUp, path);
+            Print.Write($"ClipUp\t\t\t\t\t[Found]");
+
+            if (!Misc.GetSystemApplication("wmic.exe", out path))
+            {
+                Print.Write();
+                Print.Write("Unable to find wmic.exe in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
+                IsDone();
+            }
+            Paths.SetPath(Paths.Path.WMIC, path);
+            Print.Write($"WMIC\t\t\t\t\t[Found]");
         }
 
         /// <summary>
@@ -221,18 +220,13 @@ namespace WindowsActivator
         /// </summary>
         private void IsDone()
         {
-            Console.ResetColor();
-            Console.WriteLine();
-            Console.WriteLine("Cleaning Up...");
+            Print.Write("\nCleaning Up...");
 
             Misc.CleanUpWorkSpace();
 
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\nPress any key to Exit");
-            Console.ResetColor();
+            Print.Write("\nPress any key to Exit", new ConsoleColor(), ConsoleColor.DarkYellow);
             Console.ReadKey();
+            Process.GetCurrentProcess().Kill();
         }
-
-
     }
 }

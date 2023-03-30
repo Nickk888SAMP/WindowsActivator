@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Classes\CommandHandler.cs" />
     <Compile Include="Classes\GenericWindowsKeys.cs" />
+    <Compile Include="Classes\Print.cs" />
     <Compile Include="Classes\RegistryHandler.cs" />
     <Compile Include="Classes\Activator.cs" />
     <Compile Include="Classes\Misc.cs" />
