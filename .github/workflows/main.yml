@@ -10,27 +10,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.3.1
-      
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.1.1
-      
-    - name: Restore NuGet packages
-      run: nuget restore WindowsActivator.sln
-      
+
     - name: Get version
       id: package_version
       uses: KageKirin/get-csproj-version@v0
       with:
         file: WindowsActivator.csproj
       
-    - name: Build the Solution
-      run: msbuild WindowsActivator.sln /p:Configuration=Release
-      
     - name: Show
       run: |
           echo v${{ steps.test.package_version.version }}
+
       
+   
       
