@@ -24,6 +24,7 @@ jobs:
       id: get-version
       with:
         proj-path: WindowsActivator.csproj
+        
     - run: echo "${{steps.get-version.outputs.version}}"
       
     - name: Build the Solution
