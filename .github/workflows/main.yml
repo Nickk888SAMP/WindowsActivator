@@ -21,7 +21,7 @@ jobs:
       run: nuget restore WindowsActivator.sln
       
     - name: Build the Solution
-      uses: kzrnm/get-net-sdk-project-versions-action@v1
+      uses: kzrnm/get-net-sdk-project-versions-action@v1.3.0
       id: get-version
       with:
           proj-path: WindowsActivator.csproj
