@@ -6,7 +6,7 @@ Activating should work on both x86 and x64 versions of Windows!
 | Version  | Compatibility
 | ------------- | -------------
 | Home  | :white_check_mark:
-| Home N  | Not Testet
+| Home N  | :white_check_mark:
 | Home Single Language  | :white_check_mark:
 | Home Country Specific  | Not Testet
 | Professional  | :white_check_mark:
@@ -15,8 +15,8 @@ Activating should work on both x86 and x64 versions of Windows!
 | Professional Education N  | Not Testet
 | Enterprise  | :white_check_mark:
 | Enterprise N  | Not  Testet
-| Education  | Not  Testet
-| Education N  | Not  Testet
+| Education  | :white_check_mark:
+| Education N  | :white_check_mark:
 | IoT Enterprise  | Not  Testet
 | IoT Enterprise S  | Not  Testet
 | Professional Workstation | Not Testet
