@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     
 jobs:
-  build:
+  build-and-release:
     runs-on: [windows-latest]
     
     steps:
@@ -20,8 +20,7 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore WindowsActivator.sln
       
-    - name: Get Version
-      uses: kzrnm/get-net-sdk-project-versions-action@v1
+    - uses: kzrnm/get-net-sdk-project-versions-action@v1
       id: get-version
       with:
         proj-path: WindowsActivator.csproj
