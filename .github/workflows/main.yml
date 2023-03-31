@@ -24,7 +24,6 @@ jobs:
       uses: kzrnm/get-net-sdk-project-versions-action@v1
       id: get-version
       with:
-          proj-path: YourProject/YourProject.csproj
-    - run: echo "${{steps.get-version.outputs.version}}"
+          proj-path: WindowsActivator.csproj
     - run: msbuild WindowsActivator.sln /p:Configuration=Release
       
