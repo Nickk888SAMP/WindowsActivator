@@ -14,12 +14,12 @@ Please consider temporarily disabling your antivirus software, it could trigger 
 | Home Country Specific  | Not Testet
 | Professional  | :white_check_mark:
 | Professional N  | :white_check_mark:
-| Professional Education | Not Testet
-| Professional Education N  | Not Testet
 | Enterprise  | :white_check_mark:
 | Enterprise N  | :white_check_mark:
 | Education  | :white_check_mark:
 | Education N  | :white_check_mark:
+| Professional Education | Not Testet
+| Professional Education N  | Not Testet
 | IoT Enterprise  | Not  Testet
 | IoT Enterprise S  | Not  Testet
 | Professional Workstation | Not Testet
