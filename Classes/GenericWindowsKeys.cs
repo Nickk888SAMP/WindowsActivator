@@ -10,7 +10,7 @@ namespace WindowsActivator
         {
             // Home
             { "Core", "WVRNRzMtTjZES0MtREtCNzctN005R0gtOEhWWDc=" }, // Check
-            { "CoreN", "NENQUkstTk0zSzMtWDZYWFEtUlhYODYtV1hDSFc=" },
+            { "CoreN", "NENQUkstTk0zSzMtWDZYWFEtUlhYODYtV1hDSFc=" }, // Check
             { "CoreSingleLanguage", "QlQ3OVEtRzdONkctUEdCWVctNFlXWDYtNkY0QlQ=" }, // Check
             { "CoreCountrySpecific", "TjI0MzQtWDlEN1ctOFBGNlgtOERWOVQtOFRZTUQ=" },
 
@@ -27,7 +27,7 @@ namespace WindowsActivator
             { "EnterpriseN", "M1Y2UTYtTlFYQ1gtVjhZWFItOVFDWVYtUVBGQ1Q=" },
 
             // Education
-            { "Education", "WU5NR1EtOFJZVjMtNFBHUTMtQzhYVFAtN0NGQlk=" }, 
+            { "Education", "WU5NR1EtOFJZVjMtNFBHUTMtQzhYVFAtN0NGQlk=" }, // Check
             { "EducationN", "ODROR0YtTUhCVDYtRlhCWDgtUVdKSzctRFJSOEg=" },
 
             // IoT Enterprise

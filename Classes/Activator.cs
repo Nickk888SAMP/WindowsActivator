@@ -122,8 +122,8 @@ namespace WindowsActivator
         {
             if (!Misc.HasAdminPriveleges())
             {
-                Printer.Print("\nThis application require administrator privileges.");
-                Printer.Print("To do so, right click on this application and select 'Run as administrator'.");
+                Printer.Print("\nThis application require administrator privileges.", ConsoleColor.DarkRed, ConsoleColor.White);
+                Printer.Print("To do so, right click on this application and select 'Run as administrator'.", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
             }
 
@@ -131,7 +131,7 @@ namespace WindowsActivator
 
             if (!Misc.IsInternetConnected())
             {
-                Printer.Print("\nNo Internet Connection. Please ensure a stable internet connection to activate windows.");
+                Printer.Print("\nNo Internet Connection. Please ensure a stable internet connection to activate windows.", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
             }
 
