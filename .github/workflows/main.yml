@@ -4,10 +4,11 @@ on:
   workflow_dispatch:
     
 jobs:
-  build:
+  build-and-release:
     runs-on: [windows-latest]
     
     steps:
+    - name: Checkout code
     - uses: actions/checkout@v2
     
     - name: Setup MSBuild
@@ -19,10 +20,13 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore WindowsActivator.sln
       
+    - name: Get Version
+      uses: kzrnm/get-net-sdk-project-versions-action@v1
+      id: get-version
+      with:
+        proj-path: WindowsActivator.csproj
+    - run: echo "${{steps.get-version.outputs.version}}"
+      
     - name: Build the Solution
       run: msbuild WindowsActivator.sln /p:Configuration=Release
       
-      
-      
-    
-    
