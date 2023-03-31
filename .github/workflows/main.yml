@@ -22,7 +22,7 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore WindowsActivator.sln
       
-    - name: Build
+    - name: Build the Solution
       run: msbuild WindowsActivator.sln
       
       
