@@ -1,9 +1,12 @@
 # Windows 10/11 HWID based Activator
-A simple .NET Framework Console based Windows 10/11 Activator using HWID for permanent activation.
 
-Activating should work on both x86 and x64 versions of Windows!
+This .NET Framework Console-based application serves as a reliable Windows 10/11 Activator, utilizing the Hardware Identification (HWID) method for permanent activation. With a simple and straightforward user interface, this application offers an efficient and hassle-free solution for users looking to activate their Windows operating system.
 
-| Version  | Compatibility
+As of now, Windows 11 has only been tested on the Home Edition, but it should also work on all other editions. Activation should work on both x86 and x64 versions of Windows.
+
+Please consider temporarily disabling your antivirus software, it could trigger an alarm even though there's no malware inside the application.
+
+| Edition  | Compatibility
 | ------------- | -------------
 | Home  | :white_check_mark:
 | Home N  | :white_check_mark:
