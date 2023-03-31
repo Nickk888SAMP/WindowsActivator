@@ -20,14 +20,11 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore WindowsActivator.sln
       
-    - uses: kzrnm/get-net-sdk-project-versions-action@v1
+    - name: Build the Solution
+      uses: kzrnm/get-net-sdk-project-versions-action@v1
       id: get-version
       with:
-        proj-path: WindowsActivator.csproj
-        
-    - name: test
-      run: echo "${{steps.get-version.outputs.version}}"
-      
-    - name: Build the Solution
-      run: msbuild WindowsActivator.sln /p:Configuration=Release
+          proj-path: YourProject/YourProject.csproj
+    - run: echo "${{steps.get-version.outputs.version}}"
+    - run: msbuild WindowsActivator.sln /p:Configuration=Release
       
