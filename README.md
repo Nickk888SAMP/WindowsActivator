@@ -13,7 +13,7 @@ Please consider temporarily disabling your antivirus software, it could trigger 
 | Home Single Language  | :white_check_mark:
 | Home Country Specific  | Not Testet
 | Professional  | :white_check_mark:
-| Professional N  | Not Testet
+| Professional N  | :white_check_mark:
 | Professional Education | Not Testet
 | Professional Education N  | Not Testet
 | Enterprise  | :white_check_mark:
