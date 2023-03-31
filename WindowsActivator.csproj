@@ -66,7 +66,7 @@
   <ItemGroup>
     <Compile Include="Classes\CommandHandler.cs" />
     <Compile Include="Classes\GenericWindowsKeys.cs" />
-    <Compile Include="Classes\Print.cs" />
+    <Compile Include="Classes\Printer.cs" />
     <Compile Include="Classes\RegistryHandler.cs" />
     <Compile Include="Classes\Activator.cs" />
     <Compile Include="Classes\Misc.cs" />
@@ -81,7 +81,7 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\TicketGeneratorBinary" />
+    <EmbeddedResource Include="Resources\VGlja2V0R2VuZXJhdG9yLnhtbA==_encrypted" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">

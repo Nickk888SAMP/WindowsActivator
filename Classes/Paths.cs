@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WindowsActivator
+﻿namespace WindowsActivator
 {
     static class Paths
     {

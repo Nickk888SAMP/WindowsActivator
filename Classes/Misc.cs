@@ -1,6 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Security.Principal;
@@ -10,15 +8,6 @@ namespace WindowsActivator
 {
     static class Misc
     {
-        static public Stream CreateFile(string fileName, out string filePath)
-        {
-            filePath = $@"{Paths.GetPath(Paths.Path.WorkDirectory)}\{fileName}";
-            using (Stream s = File.Create(filePath))
-            {
-                return s;
-            }
-        }
-
         static public bool IsInternetConnected()
         {
             try
@@ -38,15 +27,15 @@ namespace WindowsActivator
         }
 
 
-        static public bool IsElevated()
+        static public bool HasAdminPriveleges()
         {
-            bool isElevated = false;
+            bool hasAdmin = false;
             using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
             {
                 WindowsPrincipal principal = new WindowsPrincipal(identity);
-                isElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+                hasAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
-            return isElevated;
+            return hasAdmin;
         }
 
         static public bool GetSystemApplication(string appName, out string pathToApp)

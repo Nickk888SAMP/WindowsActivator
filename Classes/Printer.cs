@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WindowsActivator
 {
-    static class Print
+    static class Printer
     {
-        public static void Write(string text, ConsoleColor backgroundColor, ConsoleColor foregroundColor)
+        public static void Print(string text, ConsoleColor backgroundColor, ConsoleColor foregroundColor)
         {
             Console.ResetColor();
             Console.BackgroundColor = backgroundColor;
@@ -17,15 +13,15 @@ namespace WindowsActivator
             Console.ResetColor();
         }
 
-        public static void Write(string text)
+        public static void Print(string text)
         {
             Console.ResetColor();
             Console.WriteLine(text);
         }
 
-        public static void Write()
+        public static void Print()
         {
-            Write(string.Empty);
+            Print(string.Empty);
         }
     }
 }

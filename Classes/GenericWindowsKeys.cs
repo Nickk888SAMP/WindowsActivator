@@ -1,60 +1,71 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace WindowsActivator
 {
     static class GenericWindowsKeys
     {
-        static private readonly Dictionary<string, string> editionIdToKey = new Dictionary<string, string>
+        static private readonly Dictionary<string, string> editionIdToKey_encoded = new Dictionary<string, string>
         {
             // Home
-            { "Core", "YTMG3-N6DKC-DKB77-7M9GH-8HVX7" }, // Check
-            { "CoreN", "4CPRK-NM3K3-X6XXQ-RXX86-WXCHW" },
-            { "CoreSingleLanguage", "BT79Q-G7N6G-PGBYW-4YWX6-6F4BT" }, // Check
-            { "CoreCountrySpecific", "N2434-X9D7W-8PF6X-8DV9T-8TYMD" },
+            { "Core", "WVRNRzMtTjZES0MtREtCNzctN005R0gtOEhWWDc=" }, // Check
+            { "CoreN", "NENQUkstTk0zSzMtWDZYWFEtUlhYODYtV1hDSFc=" },
+            { "CoreSingleLanguage", "QlQ3OVEtRzdONkctUEdCWVctNFlXWDYtNkY0QlQ=" }, // Check
+            { "CoreCountrySpecific", "TjI0MzQtWDlEN1ctOFBGNlgtOERWOVQtOFRZTUQ=" },
 
             // Professional
-            { "Professional", "VK7JG-NPHTM-C97JM-9MPGT-3V66T" }, //Check
-            { "ProfessionalN", "2B87N-8KFHP-DKV6R-Y2C8J-PKCKT" },
+            { "Professional", "Vks3SkctTlBIVE0tQzk3Sk0tOU1QR1QtM1Y2NlQ=" }, //Check
+            { "ProfessionalN", "MkI4N04tOEtGSFAtREtWNlItWTJDOEotUEtDS1Q=" },
 
             // Professional Education
-            { "ProfessionalEducation", "8PTT6-RNW4C-6V7J2-C2D3X-MHBPB" },
-            { "ProfessionalEducationN", "GJTYN-HDMQY-FRR76-HVGC7-QPF8P" },
+            { "ProfessionalEducation", "OFBUVDYtUk5XNEMtNlY3SjItQzJEM1gtTUhCUEI=" },
+            { "ProfessionalEducationN", "R0pUWU4tSERNUVktRlJSNzYtSFZHQzctUVBGOFA=" },
 
             // Enterprise
-            { "Enterprise", "XGVPP-NMH47-7TTHJ-W3FW7-8HV2C" },
-            { "EnterpriseN", "3V6Q6-NQXCX-V8YXR-9QCYV-QPFCT" },
+            { "Enterprise", "WEdWUFAtTk1INDctN1RUSEotVzNGVzctOEhWMkM=" }, // Check
+            { "EnterpriseN", "M1Y2UTYtTlFYQ1gtVjhZWFItOVFDWVYtUVBGQ1Q=" },
 
             // Education
-            { "Education", "YNMGQ-8RYV3-4PGQ3-C8XTP-7CFBY" }, // Check
-            { "EducationN", "84NGF-MHBT6-FXBX8-QWJK7-DRR8H" },
+            { "Education", "WU5NR1EtOFJZVjMtNFBHUTMtQzhYVFAtN0NGQlk=" }, 
+            { "EducationN", "ODROR0YtTUhCVDYtRlhCWDgtUVdKSzctRFJSOEg=" },
 
             // IoT Enterprise
-            { "IoTEnterprise", "XQQYW-NFFMW-XJPBH-K8732-CKFFD" },
-            { "IoTEnterpriseS", "QPM6N-7J2WJ-P88HH-P3YRH-YY74H" },
+            { "IoTEnterprise", "WFFRWVctTkZGTVctWEpQQkgtSzg3MzItQ0tGRkQ=" },
+            { "IoTEnterpriseS", "UVBNNk4tN0oyV0otUDg4SEgtUDNZUkgtWVk3NEg=" },
 
             // Professional Workstation
-            { "ProfessionalWorkstation", "DXG7C-N36C4-C4HTG-X4T3X-2YV77" },
-            { "ProfessionalWorkstationN", "WYPNQ-8C467-V2W6J-TX4WX-WT2RQ" },
+            { "ProfessionalWorkstation", "RFhHN0MtTjM2QzQtQzRIVEctWDRUM1gtMllWNzc=" },
+            { "ProfessionalWorkstationN", "V1lQTlEtOEM0NjctVjJXNkotVFg0V1gtV1QyUlE=" },
 
             // Cloud
-            { "Cloud", "V3WVW-N2PV2-CGWC3-34QGF-VMJ2C" },
-            { "CloudN", "NH9J3-68WK7-6FB93-4K3DF-DJ4F6" },
+            { "Cloud", "VjNXVlctTjJQVjItQ0dXQzMtMzRRR0YtVk1KMkM=" },
+            { "CloudN", "Tkg5SjMtNjhXSzctNkZCOTMtNEszREYtREo0RjY=" },
 
             // SE
-            { "SE", "K9VKN-3BGWV-Y624W-MCRMQ-BHDCD" },
-            { "SEN", "KY7PN-VR6RX-83W6Y-6DDYQ-T6R4W" },
+            { "SE", "SzlWS04tM0JHV1YtWTYyNFctTUNSTVEtQkhEQ0Q=" },
+            { "SEN", "S1k3UE4tVlI2UlgtODNXNlktNkREWVEtVDZSNFc=" },
 
             // Team
-            { "Team", "XKCNC-J26Q9-KFHD2-FKTHY-KD72Y" }
+            { "Team", "WEtDTkMtSjI2UTktS0ZIRDItRktUSFktS0Q3Mlk=" }
         };
-
-        static public bool TryGetProductKey(string editionId, out string productKey)
+        
+        static public bool TryGetProductKey(string editionId, out string decodedProductKey)
         {
-            if(editionIdToKey.TryGetValue(editionId, out productKey))
+            decodedProductKey = string.Empty;
+            if (editionIdToKey_encoded.TryGetValue(editionId, out string encodedProductKey))
             {
+                decodedProductKey = DecodeKey(encodedProductKey);
                 return true;
             }
             return false;
+        }
+
+        static private string DecodeKey(string encodedKey)
+        {
+            byte[] utf8Bytes = Convert.FromBase64String(encodedKey);
+            string decodedKey = Encoding.UTF8.GetString(utf8Bytes);
+            return decodedKey;
         }
 
     }
