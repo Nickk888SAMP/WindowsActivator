@@ -13,9 +13,9 @@ Activating should work on both x86 and x64 versions of Windows!
 | Professional N  | Not Testet
 | Professional Education | Not Testet
 | Professional Education N  | Not Testet
-| Enterprise  | Not  Testet
+| Enterprise  | :white_check_mark:
 | Enterprise N  | Not  Testet
-| Education  | :white_check_mark:
+| Education  | Not  Testet
 | Education N  | Not  Testet
 | IoT Enterprise  | Not  Testet
 | IoT Enterprise S  | Not  Testet
