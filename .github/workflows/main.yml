@@ -23,7 +23,7 @@ jobs:
       run: nuget restore WindowsActivator.sln
       
     - name: Build the Solution
-      run: msbuild WindowsActivator.sln
+      run: msbuild WindowsActivator.sln /p:Configuration=Release
       
       
       
