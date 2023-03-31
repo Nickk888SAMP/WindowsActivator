@@ -25,7 +25,8 @@ jobs:
       with:
         proj-path: WindowsActivator.csproj
         
-    - run: echo "${{steps.get-version.outputs.version}}"
+    - name: test
+      run: echo "${{steps.get-version.outputs.version}}"
       
     - name: Build the Solution
       run: msbuild WindowsActivator.sln /p:Configuration=Release
