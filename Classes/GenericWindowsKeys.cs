@@ -9,13 +9,13 @@ namespace WindowsActivator
         static private readonly Dictionary<string, string> editionIdToKey_encoded = new Dictionary<string, string>
         {
             // Home
-            { "Core", "WVRNRzMtTjZES0MtREtCNzctN005R0gtOEhWWDc=" }, // Check
-            { "CoreN", "NENQUkstTk0zSzMtWDZYWFEtUlhYODYtV1hDSFc=" }, // Check
-            { "CoreSingleLanguage", "QlQ3OVEtRzdONkctUEdCWVctNFlXWDYtNkY0QlQ=" }, // Check
+            { "Core", "WVRNRzMtTjZES0MtREtCNzctN005R0gtOEhWWDc=" },
+            { "CoreN", "NENQUkstTk0zSzMtWDZYWFEtUlhYODYtV1hDSFc=" },
+            { "CoreSingleLanguage", "QlQ3OVEtRzdONkctUEdCWVctNFlXWDYtNkY0QlQ=" },
             { "CoreCountrySpecific", "TjI0MzQtWDlEN1ctOFBGNlgtOERWOVQtOFRZTUQ=" },
 
             // Professional
-            { "Professional", "Vks3SkctTlBIVE0tQzk3Sk0tOU1QR1QtM1Y2NlQ=" }, //Check
+            { "Professional", "Vks3SkctTlBIVE0tQzk3Sk0tOU1QR1QtM1Y2NlQ=" },
             { "ProfessionalN", "MkI4N04tOEtGSFAtREtWNlItWTJDOEotUEtDS1Q=" },
 
             // Professional Education
@@ -23,11 +23,11 @@ namespace WindowsActivator
             { "ProfessionalEducationN", "R0pUWU4tSERNUVktRlJSNzYtSFZHQzctUVBGOFA=" },
 
             // Enterprise
-            { "Enterprise", "WEdWUFAtTk1INDctN1RUSEotVzNGVzctOEhWMkM=" }, // Check
-            { "EnterpriseN", "M1Y2UTYtTlFYQ1gtVjhZWFItOVFDWVYtUVBGQ1Q=" },
+            { "Enterprise", "WEdWUFAtTk1INDctN1RUSEotVzNGVzctOEhWMkM=" },
+            { "EnterpriseN", "M1Y2UTYtTlFYQ1gtVjhZWFItOVFDWVYtUVBGQ1Q=" }, 
 
             // Education
-            { "Education", "WU5NR1EtOFJZVjMtNFBHUTMtQzhYVFAtN0NGQlk=" }, // Check
+            { "Education", "WU5NR1EtOFJZVjMtNFBHUTMtQzhYVFAtN0NGQlk=" },
             { "EducationN", "ODROR0YtTUhCVDYtRlhCWDgtUVdKSzctRFJSOEg=" },
 
             // IoT Enterprise

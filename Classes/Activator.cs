@@ -111,6 +111,7 @@ namespace WindowsActivator
                 else
                 {
                     Printer.Print($"Activation Failed.", ConsoleColor.DarkRed, ConsoleColor.White);
+                    Printer.Print($"Try once again. Sometimes windows does stuff...", ConsoleColor.DarkRed, ConsoleColor.White);
                 }
             }
         }
