@@ -21,7 +21,7 @@ namespace WindowsActivator
         public void Run()
         {
             // Set working directory path
-            Paths.SetPath(Paths.Path.WorkDirectory, Path.GetTempPath() + @"WindowsActivator");
+            Paths.SetPath(Paths.Path.WorkDirectory, Environment.GetFolderPath(Environment.SpecialFolder.Windows) + @"\WindowsActivator");
 
             // Create working directory if not exists.
             if (!Directory.Exists(Paths.GetPath(Paths.Path.WorkDirectory)))
@@ -29,7 +29,7 @@ namespace WindowsActivator
                 Directory.CreateDirectory(Paths.GetPath(Paths.Path.WorkDirectory));
             }
 
-            // Cheks if the OS is supported.
+            // Checks if the OS is supported.
             if (!Misc.IsOSSupported(productData.Build))
             {
                 Printer.Print("\nUnsupported OS version detected.", ConsoleColor.DarkRed, ConsoleColor.White);
