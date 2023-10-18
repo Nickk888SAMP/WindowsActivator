@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Input;
 using WindowsActivator.Classes;
 
 namespace WindowsActivator
@@ -21,13 +22,7 @@ namespace WindowsActivator
         public void Run()
         {
             // Set working directory path
-            Paths.SetPath(Paths.Path.WorkDirectory, Environment.GetFolderPath(Environment.SpecialFolder.Windows) + @"\WindowsActivator");
-
-            // Create working directory if not exists.
-            if (!Directory.Exists(Paths.GetPath(Paths.Path.WorkDirectory)))
-            {
-                Directory.CreateDirectory(Paths.GetPath(Paths.Path.WorkDirectory));
-            }
+            Paths.SetPath(Paths.Path.WorkDirectory, Environment.GetFolderPath(Environment.SpecialFolder.Windows) + @"\Windows Activator");
 
             // Checks if the OS is supported.
             if (!Misc.IsOSSupported(productData.Build))
@@ -67,7 +62,7 @@ namespace WindowsActivator
         {
             string output;
             string command;
-            
+
             // Tries to get the generic product key from the provided Edition ID
             if (!GenericWindowsKeys.TryGetProductKey(productData.EditionID, out string productKey))
             {
@@ -76,44 +71,63 @@ namespace WindowsActivator
             }
 
             // Tries to install the generic product key into the system
-            
             command = $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /ipk {productKey}";
-            output = CommandHandler.RunCommand(CommandHandler.CommandType.PowerShell, command);
+            output = CommandHandler.RunCommand(command);
             if (!output.Contains(productKey))
             {
                 Printer.Print("Generic product key couldn't be installed. Wrong product key?", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
             }
             Printer.Print("Generic Product Key\t\t\t[ Installed ]");
-            
-            // Tries to generate a GenuineTicket.xml file
-            if (!TicketGenerator.GenerateGenuineTicket(productData.PFN))
-            {
-                Printer.Print("Genuine ticket couldn't be generated.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
-            }
-            Printer.Print("Genuine Ticket\t\t\t\t[ Generated ]");
 
-            // Tries to convert the GenuineTicket.xml wih the product key and the HWID
-            command = $"{Paths.GetPath(Paths.Path.ClipUp)} -v -o -altto {Paths.GetPath(Paths.Path.WorkDirectory)}";
-            output = CommandHandler.RunCommand(CommandHandler.CommandType.PowerShell, command);
-            if (output.Contains("Done."))
+            // Try activation via KMS
+            KMS.Initialize();
+            bool providerFound = false;
+            while (!providerFound && KMS.KMSUrlCount() > 0)
             {
-                Printer.Print("Genuine Ticket Conversion\t\t[ Success ]");
-                Printer.Print("\nActivating...\n");
-                CommandHandler.RunCommand(CommandHandler.CommandType.PowerShell, $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /ato");
+                if (KMS.GetKMSProvider(out string kmsUrl))
+                {
+                    // Set KMS
+                    Printer.Print($"Trying KMS provider \t\t\t[ {kmsUrl} ] ", true);
+                    command = $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /skms {kmsUrl}";
+                    CommandHandler.RunCommand(command);
 
-                // Checks if the system has been activated
-                if (Misc.IsSystemPermanentActivated())
-                {
-                    Printer.Print($"{productData.Name} is permanently activated with a digital license.", ConsoleColor.DarkGreen, ConsoleColor.White);
-                }
-                else
-                {
-                    Printer.Print($"Activation Failed.", ConsoleColor.DarkRed, ConsoleColor.White);
-                    Printer.Print($"Try once again. Sometimes windows does stuff...", ConsoleColor.DarkRed, ConsoleColor.White);
+                    // Try activating using KMS
+                    output = CommandHandler.RunCommand($"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /ato");
+
+                    // Invalid product key
+                    if (output.Contains("0x803F7001"))
+                    {
+                        Printer.Print("[ Failed ]");
+                        Printer.Print("Product Key is not valid. Please contact the apps creator on GitHub.", ConsoleColor.DarkRed, ConsoleColor.White);
+                        break;
+                    }
+
+                    // no connection to KMS provider
+                    if (output.Contains("0xC004F074"))
+                    {
+                        Printer.Print("[ Failed ]");
+                        KMS.RemoveKMSUrl(kmsUrl);
+                        continue;
+                    }
+
+                    // Success
+                    Printer.Print("[ Success ]");
+                    providerFound = true;
                 }
             }
+
+            // Checks if the system has been activated
+            if (Misc.IsSystemActivated())
+            {
+                Printer.Print($"\n{productData.Name} is activated with a digital license.", ConsoleColor.DarkGreen, ConsoleColor.White);
+            }
+            else
+            {
+                Printer.Print($"\nActivation Failed.", ConsoleColor.DarkRed, ConsoleColor.White);
+            }
+
+            IsDone();
         }
 
         /// <summary>
@@ -139,9 +153,9 @@ namespace WindowsActivator
             Printer.Print("Internet Connection\t\t\t[ Connected ]");
             Printer.Print($"OS Info\t\t\t\t\t[ {productData.Name} | {productData.Build} | {productData.Architecture} ]");
 
-            if (Misc.IsSystemPermanentActivated())
+            if (!Program.ignoreExistingActivation && Misc.IsSystemActivated())
             {
-                Printer.Print($"\n{productData.Name} is currently Permanently Activated", ConsoleColor.White, ConsoleColor.Black);
+                Printer.Print($"\n{productData.Name} is currently Activated", ConsoleColor.White, ConsoleColor.Black);
                 Printer.Print($"Do you still want to proceed with the activation?", ConsoleColor.Black, ConsoleColor.DarkYellow);
                 Printer.Print($"Press the 'Enter' button to continue.", ConsoleColor.Black, ConsoleColor.DarkYellow);
                 if(Console.ReadKey().Key != ConsoleKey.Enter)
@@ -167,15 +181,6 @@ namespace WindowsActivator
             Paths.SetPath(Paths.Path.CMD, path);
             Printer.Print($"CMD\t\t\t\t\t[ Found ]");
 
-            if (!Misc.GetSystemApplication("powershell.exe", out path))
-            {
-                Printer.Print();
-                Printer.Print("Unable to find powershell.exe in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
-            }
-            Paths.SetPath(Paths.Path.PowerShell, path);
-            Printer.Print($"Powershell\t\t\t\t[ Found ]");
-
             if (!Misc.GetSystemApplication("slmgr.vbs", out path))
             {
                 Printer.Print();
@@ -194,15 +199,6 @@ namespace WindowsActivator
             Paths.SetPath(Paths.Path.CScript, path);
             Printer.Print($"CScript\t\t\t\t\t[ Found ]");
 
-            if (!Misc.GetSystemApplication("ClipUp.exe", out path))
-            {
-                Printer.Print();
-                Printer.Print("Unable to find clipup.exe in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
-            }
-            Paths.SetPath(Paths.Path.ClipUp, path);
-            Printer.Print($"ClipUp\t\t\t\t\t[ Found ]");
-
             if (!Misc.GetSystemApplication("wmic.exe", out path))
             {
                 Printer.Print();
@@ -218,12 +214,11 @@ namespace WindowsActivator
         /// </summary>
         private void IsDone()
         {
-            Printer.Print("\nCleaning Up...");
-
-            Misc.CleanUpWorkSpace();
-
-            Printer.Print("\nPress any key to Exit", new ConsoleColor(), ConsoleColor.DarkYellow);
-            Console.ReadKey();
+            if (!Program.autoCloseOnIsDone)
+            {
+                Printer.Print("\nPress any key to Exit", new ConsoleColor(), ConsoleColor.DarkYellow);
+                Console.ReadKey();
+            }
             Process.GetCurrentProcess().Kill();
         }
     }

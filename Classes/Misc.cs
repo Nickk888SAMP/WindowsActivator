@@ -1,24 +1,32 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Security.Policy;
 using System.Security.Principal;
+using System.Threading;
 using WindowsActivator.Classes;
 
 namespace WindowsActivator
 {
     static class Misc
     {
-        static public bool IsInternetConnected()
+        /// <summary>
+        /// Checks if an URL is active by pinging.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        static public bool IsURLActive(string url)
         {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Timeout = 15000;
+            request.Method = "HEAD";
             try
             {
-                Ping myPing = new Ping();
-                string host = "google.com";
-                byte[] buffer = new byte[32];
-                int timeout = 1000;
-                PingOptions pingOptions = new PingOptions();
-                PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
-                return (reply.Status == IPStatus.Success);
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
             }
             catch (Exception)
             {
@@ -26,7 +34,19 @@ namespace WindowsActivator
             }
         }
 
+        /// <summary>
+        /// Checks if there's an internet connection pinging google.com
+        /// </summary>
+        /// <returns></returns>
+        static public bool IsInternetConnected()
+        {
+            return IsURLActive("http://www.google.com");
+        }
 
+        /// <summary>
+        /// Checks if the application has Administration priveleges
+        /// </summary>
+        /// <returns></returns>
         static public bool HasAdminPriveleges()
         {
             bool hasAdmin = false;
@@ -38,6 +58,12 @@ namespace WindowsActivator
             return hasAdmin;
         }
 
+        /// <summary>
+        /// Tries to get a system application
+        /// </summary>
+        /// <param name="appName"></param>
+        /// <param name="pathToApp"></param>
+        /// <returns></returns>
         static public bool GetSystemApplication(string appName, out string pathToApp)
         {
             pathToApp = null;
@@ -54,6 +80,20 @@ namespace WindowsActivator
                 }
             }
             return found;
+        }
+
+        static public bool ReadFileFromURL(string url, out string content)
+        {
+            content = String.Empty;
+            if(IsURLActive(url))
+            {
+                WebClient client = new WebClient();
+                Stream stream = client.OpenRead(url);
+                StreamReader reader = new StreamReader(stream);
+                content = reader.ReadToEnd();
+                return true;
+            }
+            return false;
         }
 
         static public int GetWindowsBuild()
@@ -77,19 +117,14 @@ namespace WindowsActivator
             return Environment.GetEnvironmentVariable("SystemRoot");
         }
 
-        static public void CleanUpWorkSpace()
-        {
-            Directory.Delete(Paths.GetPath(Paths.Path.WorkDirectory), true);
-        }
-
         static public string GetWindowsArch()
         {
             return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", "PROCESSOR_ARCHITECTURE");
         }
 
-        static public bool IsSystemPermanentActivated()
+        static public bool IsSystemActivated()
         {
-            string output = CommandHandler.RunCommand(CommandHandler.CommandType.CMD, $"{Paths.GetPath(Paths.Path.WMIC)} path SoftwareLicensingProduct where(LicenseStatus= '1' and GracePeriodRemaining = '0' and PartialProductKey is not NULL) get Name /value 2> nul");
+            string output = CommandHandler.RunCommand($"{Paths.GetPath(Paths.Path.WMIC)} path SoftwareLicensingProduct where(LicenseStatus= '1' and PartialProductKey is not NULL) get Name /value 2> nul");
             return output.Contains("Windows");
         }
 
