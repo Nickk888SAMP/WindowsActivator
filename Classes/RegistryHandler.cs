@@ -15,6 +15,13 @@ namespace WindowsActivator
             CURRENT_CONFIG
         }
 
+        /// <summary>
+        /// Gets a registry value.
+        /// </summary>
+        /// <param name="rootKey"></param>
+        /// <param name="subKey"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         static public string GetRegistryStringValue(RegistryRootKey rootKey, string subKey, string key)
         {
             try
@@ -51,6 +58,14 @@ namespace WindowsActivator
 
         }
 
+        /// <summary>
+        /// Creates a registry entry.
+        /// </summary>
+        /// <param name="rootKey"></param>
+        /// <param name="subKey"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <param name="valueKind"></param>
         static public void CreateRegistrySubKeyEntry(RegistryRootKey rootKey, string subKey, string name, object value, RegistryValueKind valueKind)
         {
             try

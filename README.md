@@ -20,14 +20,3 @@ Please consider temporarily disabling your antivirus software, it could trigger 
 | Enterprise N  | :white_check_mark:
 | Education  | :white_check_mark:
 | Education N  | :white_check_mark:
-| Professional Education | Not Testet
-| Professional Education N  | Not Testet
-| IoT Enterprise  | Not  Testet
-| IoT Enterprise S  | Not  Testet
-| Professional Workstation | Not Testet
-| Professional Workstation N | Not Testet
-| Cloud | Not Testet
-| Cloud N | Not Testet
-| SE | Not Testet
-| SE N | Not Testet
-| Team | Not Testet

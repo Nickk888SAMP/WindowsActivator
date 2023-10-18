@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("Windows Activator")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A Windows Activator using KMS as the method.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Windows Activator")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("Nickk888")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

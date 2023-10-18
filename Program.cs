@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 
@@ -6,6 +7,7 @@ namespace WindowsActivator
 {
     public static class Program
     {
+        // Preferences
         public static bool ignoreDisclaimer = false; // Arg: -id
         public static bool ignoreExistingActivation = false; // Arg: -iea
         public static bool autoCloseOnIsDone = false; // Arg: -ac
@@ -22,24 +24,11 @@ namespace WindowsActivator
                 else if (arg == "-no") noOutput = true;
             }
 
-            /*TaskDefinition td = TaskService.Instance.NewTask();
-
-            td.RegistrationInfo.Author = "Nickk888";
-            td.RegistrationInfo.Description = "Activates windows";
-            td.Actions.Add(new ExecAction(@"C:\Users\Test\Desktop\Windows Activator.exe"));
-            Trigger trigger = new Trigger();
-
-            td.Triggers.Add()
-
-            TaskService.Instance.RootFolder.CreateFolder("Windows Activator", null, false);
-            var folder = TaskService.Instance.GetFolder("Windows Activator");
-            folder.RegisterTaskDefinition("Activator Windows", td);*/
-
             // Gets the version of the application.
             string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             // Changes the title of the application.
-            Console.Title = $"Windows Activator v. {version}";
+            Console.Title = $"Windows Activator v. {version} [Pre-Release]";
 
             // Activator 
             Activator activator = new Activator();

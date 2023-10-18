@@ -17,6 +17,11 @@
         private static string wmicPath;
         private static string applicationWorkDirectory;
 
+        /// <summary>
+        /// Sets the path.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="fullPath"></param>
         public static void SetPath(Path path, string fullPath)
         {
             switch (path)
@@ -39,6 +44,11 @@
             }
         }
 
+        /// <summary>
+        /// Gets the Path.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string GetPath(Path path)
         {
             switch(path)

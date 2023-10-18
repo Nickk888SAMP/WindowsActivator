@@ -4,6 +4,11 @@ namespace WindowsActivator.Classes
 {
     static class CommandHandler
     {
+        /// <summary>
+        /// Runs a command in the command line.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public static string RunCommand(string command)
         {
             ProcessStartInfo psi = new ProcessStartInfo {

@@ -17,6 +17,7 @@ namespace WindowsActivator
             Console.ResetColor();
             Console.BackgroundColor = backgroundColor;
             Console.ForegroundColor = foregroundColor;
+
             if (!inline)
                 Console.WriteLine(text);
             else

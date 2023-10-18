@@ -26,6 +26,12 @@ namespace WindowsActivator
             { "EducationN", "2WH4N-8QGBV-H22JP-CT43Q-MDWWJ" }
         };
         
+        /// <summary>
+        /// Tries to get the product key of the operating systems edition ID.
+        /// </summary>
+        /// <param name="editionId"></param>
+        /// <param name="productKey"></param>
+        /// <returns></returns>
         static public bool TryGetProductKey(string editionId, out string productKey)
         {
             productKey = string.Empty;

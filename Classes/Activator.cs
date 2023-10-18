@@ -28,19 +28,19 @@ namespace WindowsActivator
             if (!Misc.IsOSSupported(productData.Build))
             {
                 Printer.Print("\nUnsupported OS version detected.", ConsoleColor.DarkRed, ConsoleColor.White);
-                Printer.Print("HWID Activation is supported only for Windows 10/11.", ConsoleColor.DarkRed, ConsoleColor.White);
+                Printer.Print("Activation is supported only for Windows 10/11.", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
             }
 
             // Checks if OS is a windows server
             if (Misc.IsWindowsServer())
             {
-                Printer.Print("\nHWID Activation is not supported for Windows Server.", ConsoleColor.DarkRed, ConsoleColor.White);
+                Printer.Print("\nActivation is not supported for Windows Server.", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
             }
 
             // Searches for important system apps
-            Printer.Print("Searching important system applications", ConsoleColor.White, ConsoleColor.Black);
+            Printer.Print("Searching system applications", ConsoleColor.White, ConsoleColor.Black);
             CheckOSApps();
 
             // Diagnoses the system before activate attempt
@@ -48,15 +48,19 @@ namespace WindowsActivator
             Diagnose();
 
             // Tries to activate the system
-            Printer.Print($"\nProceeding with activation...\n");
+            Printer.Print("\nActivating", ConsoleColor.White, ConsoleColor.Black);
             Activate();
+
+            // Checks if the system has been activated
+            Printer.Print("\nVerifying", ConsoleColor.White, ConsoleColor.Black);
+            CheckActivation();
 
             // Ends
             IsDone();
         }
 
         /// <summary>
-        /// Attemps to activate Windows
+        /// Attemps to activate Windows.
         /// </summary>
         private void Activate()
         {
@@ -83,7 +87,7 @@ namespace WindowsActivator
             // Try activation via KMS
             KMS.Initialize();
             bool providerFound = false;
-            while (!providerFound && KMS.KMSUrlCount() > 0)
+            while (!providerFound && KMS.urlsCount > 0)
             {
                 if (KMS.GetKMSProvider(out string kmsUrl))
                 {
@@ -99,7 +103,7 @@ namespace WindowsActivator
                     if (output.Contains("0x803F7001"))
                     {
                         Printer.Print("[ Failed ]");
-                        Printer.Print("Product Key is not valid. Please contact the apps creator on GitHub.", ConsoleColor.DarkRed, ConsoleColor.White);
+                        Printer.Print("Product Key is not valid. OS not compatible. If you think this OS is compatible, please contact the apps creator on GitHub.", ConsoleColor.DarkRed, ConsoleColor.White);
                         break;
                     }
 
@@ -116,18 +120,25 @@ namespace WindowsActivator
                     providerFound = true;
                 }
             }
+            if(!providerFound)
+            {
+                Printer.Print($"Found no valid KMS provider.", ConsoleColor.DarkRed, ConsoleColor.White);
+            }
+        }
 
-            // Checks if the system has been activated
+        /// <summary>
+        /// Verifies the activation.
+        /// </summary>
+        private void CheckActivation()
+        {
             if (Misc.IsSystemActivated())
             {
-                Printer.Print($"\n{productData.Name} is activated with a digital license.", ConsoleColor.DarkGreen, ConsoleColor.White);
+                Printer.Print($"{productData.Name} has been activated.", ConsoleColor.DarkGreen, ConsoleColor.White);
             }
             else
             {
-                Printer.Print($"\nActivation Failed.", ConsoleColor.DarkRed, ConsoleColor.White);
+                Printer.Print($"Activation Failed.", ConsoleColor.DarkRed, ConsoleColor.White);
             }
-
-            IsDone();
         }
 
         /// <summary>
@@ -167,46 +178,31 @@ namespace WindowsActivator
 
 
         /// <summary>
-        /// Checks for important System applications
+        /// Checks for important System applications.
         /// </summary>
         private void CheckOSApps()
         {
-            string path;
-            if (!Misc.GetSystemApplication("cmd.exe", out path))
-            {
-                Printer.Print();
-                Printer.Print("Unable to find cmd.exe in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
-            }
-            Paths.SetPath(Paths.Path.CMD, path);
-            Printer.Print($"CMD\t\t\t\t\t[ Found ]");
+            GetSystemApplication("cmd.exe", Paths.Path.CMD);
+            GetSystemApplication("slmgr.vbs", Paths.Path.SLMGR);
+            GetSystemApplication("cscript.exe", Paths.Path.CScript);
+            GetSystemApplication("wmic.exe", Paths.Path.WMIC);
+        }
 
-            if (!Misc.GetSystemApplication("slmgr.vbs", out path))
+        /// <summary>
+        /// Tries to get a system application and does all the printing, canceling or continuing.
+        /// </summary>
+        /// <param name="appName"></param>
+        /// <param name="path"></param>
+        private void GetSystemApplication(string appName, Paths.Path path)
+        {
+            if (!Misc.GetSystemApplication(appName, out string pathToApp))
             {
                 Printer.Print();
-                Printer.Print("Unable to find slmgr.vbs in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
+                Printer.Print($"Unable to find {appName} in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
                 IsDone();
             }
-            Paths.SetPath(Paths.Path.SLMGR, path);
-            Printer.Print($"SLMGR\t\t\t\t\t[ Found ]");
-
-            if (!Misc.GetSystemApplication("cscript.exe", out path))
-            {
-                Printer.Print();
-                Printer.Print("Unable to find cscript.exe in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
-            }
-            Paths.SetPath(Paths.Path.CScript, path);
-            Printer.Print($"CScript\t\t\t\t\t[ Found ]");
-
-            if (!Misc.GetSystemApplication("wmic.exe", out path))
-            {
-                Printer.Print();
-                Printer.Print("Unable to find wmic.exe in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
-            }
-            Paths.SetPath(Paths.Path.WMIC, path);
-            Printer.Print($"WMIC\t\t\t\t\t[ Found ]");
+            Paths.SetPath(path, pathToApp);
+            Printer.Print($"{appName}".PadRight(40) + "[ Found ]");
         }
 
         /// <summary>

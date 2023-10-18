@@ -82,6 +82,12 @@ namespace WindowsActivator
             return found;
         }
 
+        /// <summary>
+        /// Reads a text file from a URL and outputs a string.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
         static public bool ReadFileFromURL(string url, out string content)
         {
             content = String.Empty;
@@ -96,48 +102,85 @@ namespace WindowsActivator
             return false;
         }
 
+        /// <summary>
+        /// Gets the current windows Build.
+        /// </summary>
+        /// <returns></returns>
         static public int GetWindowsBuild()
         {
             return Environment.OSVersion.Version.Build;
         }
 
+        /// <summary>
+        /// Checks if the OS is supported.
+        /// </summary>
+        /// <param name="buildNumber"></param>
+        /// <returns></returns>
         static public bool IsOSSupported(int buildNumber)
         {
             return buildNumber > 10240;
         }
 
+        /// <summary>
+        /// Checks if it's a windows server.
+        /// </summary>
+        /// <returns></returns>
         static public bool IsWindowsServer()
         {
             string serverEditionFilePath = $@"{GetSystemRootDirectory()}\Servicing\Packages\Microsoft-Windows-Server*Edition~*.mum";
             return File.Exists(serverEditionFilePath);
         }
 
+        /// <summary>
+        /// Gets the systems root directory. 
+        /// </summary>
+        /// <returns></returns>
         static public string GetSystemRootDirectory()
         {
             return Environment.GetEnvironmentVariable("SystemRoot");
         }
 
+        /// <summary>
+        /// Gets the architecture of the operating system.
+        /// </summary>
+        /// <returns></returns>
         static public string GetWindowsArch()
         {
             return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", "PROCESSOR_ARCHITECTURE");
         }
 
+        /// <summary>
+        /// Checks if the system is activated.
+        /// </summary>
+        /// <returns></returns>
         static public bool IsSystemActivated()
         {
             string output = CommandHandler.RunCommand($"{Paths.GetPath(Paths.Path.WMIC)} path SoftwareLicensingProduct where(LicenseStatus= '1' and PartialProductKey is not NULL) get Name /value 2> nul");
             return output.Contains("Windows");
         }
 
+        /// <summary>
+        /// Gets the OS product name.
+        /// </summary>
+        /// <returns></returns>
         static public string GetProductName()
         {
             return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
         }
 
+        /// <summary>
+        /// Gets the OS edition id.
+        /// </summary>
+        /// <returns></returns>
         static public string GetEditionID()
         {
             return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "EditionID");
         }
 
+        /// <summary>
+        /// Gets the OS product Pfn
+        /// </summary>
+        /// <returns></returns>
         static public string GetProductPfn()
         {
             return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\ProductOptions", "OSProductPfn");
