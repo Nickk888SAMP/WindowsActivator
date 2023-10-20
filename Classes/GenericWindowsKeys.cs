@@ -33,7 +33,6 @@ namespace WindowsActivator
         /// <returns></returns>
         static public bool TryGetProductKey(string editionId, out string productKey)
         {
-            productKey = string.Empty;
             if (editionIdToKey.TryGetValue(editionId, out productKey))
             {
                 return true;

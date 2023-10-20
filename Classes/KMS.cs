@@ -9,7 +9,7 @@ namespace WindowsActivator.Classes
         private static readonly string kmsProviderslistUrl = @"http://raw.githubusercontent.com/Nickk888SAMP/WindowsActivator/master/KMSProviders";
         private static List<string> kmsUrls = new List<string>();
 
-        public static int urlsCount { get { return kmsUrls.Count; } }
+        public static int UrlsCount { get { return kmsUrls.Count; } }
 
         /// <summary>
         /// Initializes the KMS URL List.

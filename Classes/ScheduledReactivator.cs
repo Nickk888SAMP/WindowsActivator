@@ -138,10 +138,12 @@ namespace WindowsActivator.Classes
             td.Settings.StartWhenAvailable = true;
 
             // Trigger
-            WeeklyTrigger wt = new WeeklyTrigger();
-            wt.StartBoundary = DateTime.Today.AddDays(7).AddHours(6);
-            wt.DaysOfWeek = DaysOfTheWeek.AllDays;
-            wt.WeeksInterval = 1;
+            WeeklyTrigger wt = new WeeklyTrigger
+            {
+                StartBoundary = DateTime.Today.AddDays(7).AddHours(6),
+                DaysOfWeek = DaysOfTheWeek.AllDays,
+                WeeksInterval = 1
+            };
             wt.Repetition.Duration = TimeSpan.Zero;
             wt.Repetition.Interval = TimeSpan.FromDays(7);
             td.Triggers.Add(wt);
@@ -150,7 +152,7 @@ namespace WindowsActivator.Classes
             td.Actions.Add(startScriptPath);
 
             // Register
-            Task task = TaskService.Instance.RootFolder.RegisterTaskDefinition("Windows Activator", td);
+            TaskService.Instance.RootFolder.RegisterTaskDefinition("Windows Activator", td);
         }
 
     }

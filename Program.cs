@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using WindowsActivator.Classes;
 
@@ -9,9 +10,9 @@ namespace WindowsActivator
         public static string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         // Preferences
-        public static bool ignoreDisclaimer = false; // Arg: -id
         public static bool ignoreExistingActivation = false; // Arg: -iea
         public static bool autoCloseOnIsDone = false; // Arg: -ac
+        public static int selectedOption = 0; //-opt:NUMBER
 
         // Starting point
         static void Main(string[] arguments)
@@ -61,8 +62,16 @@ namespace WindowsActivator
 
                 // Manage Options
                 Printer.Print("\n\tOption:  ", true);
-                string key = Console.ReadLine();
-                switch(key)
+                string key;
+                if (selectedOption == 0)
+                {
+                    key = Console.ReadLine();
+                }
+                else
+                {
+                    key = selectedOption.ToString();
+                }
+                switch (key)
                 {
                     case "1":
                         if(Activator.Install())
@@ -96,9 +105,21 @@ namespace WindowsActivator
             {
                 switch (argument)
                 {
-                    case "-id": ignoreDisclaimer = true; break;
                     case "-iea": ignoreExistingActivation = true; break;
                     case "-ac": autoCloseOnIsDone = true; break;
+                    default:
+                    {
+                        string[] str = argument.Split(':');
+                        if(str.Length > 0)
+                        {
+                            selectedOption = Convert.ToInt32(str[1]);
+                        }
+                        else
+                        {
+                            selectedOption = 0;
+                        }
+                        break;
+                    }
                 }
             }
         }

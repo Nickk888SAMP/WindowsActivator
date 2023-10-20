@@ -16,7 +16,6 @@ namespace WindowsActivator
 
         static private string output;
         static private string command;
-        static private bool returnStatus;
 
         /// <summary>
         /// Runs the activation process.
@@ -115,7 +114,7 @@ namespace WindowsActivator
             // Try activation via KMS
             KMS.Initialize();
             bool providerFound = false;
-            while (!providerFound && KMS.urlsCount > 0)
+            while (!providerFound && KMS.UrlsCount > 0)
             {
                 if (KMS.GetKMSProvider(out string kmsUrl))
                 {

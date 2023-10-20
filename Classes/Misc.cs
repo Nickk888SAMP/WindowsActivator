@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Security.Principal;
+using System.Windows.Forms;
 using WindowsActivator.Classes;
 
 namespace WindowsActivator
@@ -210,6 +212,10 @@ namespace WindowsActivator
             {
                 Printer.Print("\nPress any key to continue.", new ConsoleColor(), ConsoleColor.DarkYellow);
                 Console.ReadKey();
+            }
+            else
+            {
+                Process.GetCurrentProcess().Kill();
             }
         }
 

@@ -14,7 +14,7 @@ Dim activatorPath
 activatorPath = scriptDirectory & "*FILENAME*"
 
 Dim arguments
-arguments = "-id -iea -ac"
+arguments = "-iea -ac -opt:2"
 
 WinScriptHost.Run Chr(34) & activatorPath & Chr(34) & " " & arguments, 0
 Set WinScriptHost = Nothing
