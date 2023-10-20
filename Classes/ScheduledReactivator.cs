@@ -5,8 +5,12 @@ using Microsoft.Win32.TaskScheduler;
 
 namespace WindowsActivator.Classes
 {
-    public static class Automator
+    public static class ScheduledReactivator
     {
+        /// <summary>
+        /// Installs the activator files in the App's directory and creates a task in the Task Scheduler that runs the files every 7 days.
+        /// </summary>
+        /// <returns></returns>
         public static bool Install()
         {
             try
@@ -18,10 +22,10 @@ namespace WindowsActivator.Classes
                 string combinedFileDir = $"{appFileDir}{appFileName}";
                 string combinedCopyFileToDir = $@"{appDirectory}\app.exe";
                 string combinedAutomatorScriptFileDir = $@"{appDirectory}\run.vbs";
-                string automatorScriptContent = GetAutomatorScriptContent("app.exe");
+                string runScriptContent = GetAutomatorScriptContent("app.exe");
                 
                 //Files
-                CreateFiles(combinedFileDir, combinedCopyFileToDir, combinedAutomatorScriptFileDir, automatorScriptContent);
+                CreateFiles(combinedFileDir, combinedCopyFileToDir, combinedAutomatorScriptFileDir, runScriptContent);
 
                 //Task Scheduler
                 CreateScheduledTask(combinedAutomatorScriptFileDir);
@@ -33,6 +37,10 @@ namespace WindowsActivator.Classes
             }
         }
 
+        /// <summary>
+        /// Removes all the Activators files in the Activator's directory and deletes the task from the Task Scheduler.
+        /// </summary>
+        /// <returns></returns>
         public static bool Uninstall()
         {
             try
@@ -53,14 +61,23 @@ namespace WindowsActivator.Classes
             }
         }
 
+        /// <summary>
+        /// Checks if the Scheduled reactivation is Installed/Active or not.
+        /// </summary>
+        /// <returns></returns>
         public static bool IsInstalled()
         {
             return Directory.Exists(Paths.GetPath(Paths.Path.AppDirectory)) && TaskService.Instance.GetTask("Windows Activator") != null;
         }
 
+        /// <summary>
+        /// Gets the content from the Resources script file and  replaces the *FILENAME* to the App's Name.
+        /// </summary>
+        /// <param name="appName"></param>
+        /// <returns></returns>
         private static string GetAutomatorScriptContent(string appName)
         {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("WindowsActivator.Resources.automatorscript.vbs"))
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("WindowsActivator.Resources.run.vbs"))
             {
                 using (StreamReader sr = new StreamReader(stream))
                 {
@@ -70,8 +87,14 @@ namespace WindowsActivator.Classes
             }
         }
 
-
-        private static void CreateFiles(string combinedFileDir, string combinedCopyFileToDir, string combinedAutomatorScriptFileDir, string automatorScriptContent)
+        /// <summary>
+        /// Creates a Directory and creates a copy of the Activator in it, also a script that runs the activator in the background.
+        /// </summary>
+        /// <param name="combinedFileDir"></param>
+        /// <param name="combinedCopyFileToDir"></param>
+        /// <param name="combinedAutomatorScriptFileDir"></param>
+        /// <param name="runScriptContent"></param>
+        private static void CreateFiles(string combinedFileDir, string combinedCopyFileToDir, string combinedAutomatorScriptFileDir, string runScriptContent)
         {
             // Create the directory for the files.
             if (!Directory.Exists(Paths.GetPath(Paths.Path.AppDirectory)))
@@ -85,15 +108,22 @@ namespace WindowsActivator.Classes
             // Create the activation script.
             using (var stream = new StreamWriter(combinedAutomatorScriptFileDir))
             {
-                stream.Write(automatorScriptContent);
+                stream.Write(runScriptContent);
             }
         }
 
+        /// <summary>
+        /// Removes the schedules Task if exists.
+        /// </summary>
         private static void RemoveScheduledTask()
         {
             TaskService.Instance.RootFolder.DeleteTask("Windows Activator", false);
         }
 
+        /// <summary>
+        /// Creates the scheduled Task.
+        /// </summary>
+        /// <param name="startScriptPath"></param>
         private static void CreateScheduledTask(string startScriptPath)
         {
             // Remove any existent Task

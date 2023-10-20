@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Windows.Input;
+using System.Threading;
 using WindowsActivator.Classes;
 
 namespace WindowsActivator
@@ -16,59 +14,91 @@ namespace WindowsActivator
             Misc.GetProductPfn(),
             Misc.GetEditionID());
 
+        static private string output;
+        static private string command;
+        static private bool returnStatus;
+
         /// <summary>
         /// Runs the activation process.
         /// </summary>
-        public static void Run()
+        public static bool Install()
         {
+            Console.Clear();
+
             // Checks if the OS is supported.
             if (!Misc.IsOSSupported(productData.Build))
             {
                 Printer.Print("\nUnsupported OS version detected.", ConsoleColor.DarkRed, ConsoleColor.White);
                 Printer.Print("Activation is supported only for Windows 10/11.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
+                Misc.IsDone();
+                return false;
             }
-
-            // Checks if OS is a windows server
-            if (Misc.IsWindowsServer())
-            {
-                Printer.Print("\nActivation is not supported for Windows Server.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
-            }
-
-            // Searches for important system apps
-            Printer.Print("Searching system applications", ConsoleColor.White, ConsoleColor.Black);
-            CheckOSApps();
 
             // Diagnoses the system before activate attempt
-            Printer.Print("\nDiagnostic Tests", ConsoleColor.White, ConsoleColor.Black);
-            Diagnose();
+            Printer.Print("Diagnostic Tests", ConsoleColor.White, ConsoleColor.Black);
+            if(!Diagnose())
+            {
+                return false;
+            }
 
             // Tries to activate the system
             Printer.Print("\nActivating", ConsoleColor.White, ConsoleColor.Black);
-            Activate();
+            if(!Activate())
+            {
+                return false;
+            }
 
             // Checks if the system has been activated
             Printer.Print("\nVerifying", ConsoleColor.White, ConsoleColor.Black);
-            CheckActivation();
+            if(!CheckActivation())
+            {
+                return false;
+            }
 
             // Ends
-            IsDone();
+            Misc.IsDone();
+            return true;
+        }
+        public static bool Uninstall()
+        {
+            Console.Clear();
+
+            // Activation
+            command = $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /upk";
+            CommandHandler.RunCommand(command);
+            Printer.Print("Generic Product Key\t\t\t[ Removed ]");
+
+            command = $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /cpky";
+            CommandHandler.RunCommand(command);
+            Printer.Print("Product key in registry\t\t\t[ Removed ]");
+
+            command = $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /rearm";
+            CommandHandler.RunCommand(command);
+            Printer.Print("Licensing status\t\t\t[ Reset ]");
+
+            // Task scheduler
+            ScheduledReactivator.Uninstall();
+            Printer.Print("Auto-Renewal\t\t\t\t[ Removed ]");
+
+            Printer.Print($"\nActivation uninstalled! Please restart the system for the changes to take effect.", ConsoleColor.DarkGreen, ConsoleColor.White);
+            Printer.Print($"\nNote: Can't be re-activated until the system has been restarted!", ConsoleColor.DarkYellow, ConsoleColor.White);
+
+            // Ends
+            Misc.IsDone();
+            return true;
         }
 
         /// <summary>
         /// Attemps to activate Windows.
         /// </summary>
-        private static void Activate()
+        private static bool Activate()
         {
-            string output;
-            string command;
-
             // Tries to get the generic product key from the provided Edition ID
             if (!GenericWindowsKeys.TryGetProductKey(productData.EditionID, out string productKey))
             {
                 Printer.Print("No product key Found!", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
+                Misc.IsDone();
+                return false;
             }
 
             // Tries to install the generic product key into the system
@@ -77,7 +107,8 @@ namespace WindowsActivator
             if (!output.Contains(productKey))
             {
                 Printer.Print("Generic product key couldn't be installed. Wrong product key?", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
+                Misc.IsDone();
+                return false;
             }
             Printer.Print("Generic Product Key\t\t\t[ Installed ]");
 
@@ -120,47 +151,65 @@ namespace WindowsActivator
             if(!providerFound)
             {
                 Printer.Print($"Found no valid KMS provider.", ConsoleColor.DarkRed, ConsoleColor.White);
+                return false;
             }
+            return true;
         }
 
         /// <summary>
         /// Verifies the activation.
         /// </summary>
-        private static void CheckActivation()
+        private static bool CheckActivation()
         {
-            if (Misc.IsSystemActivated())
-            {
-                Printer.Print($"{productData.Name} has been activated.", ConsoleColor.DarkGreen, ConsoleColor.White);
-            }
-            else
+            if (!Misc.IsSystemActivated())
             {
                 Printer.Print($"Activation Failed.", ConsoleColor.DarkRed, ConsoleColor.White);
+                return false;
             }
+            Printer.Print($"{productData.Name} has been activated.", ConsoleColor.DarkGreen, ConsoleColor.White);
+            return true;
         }
 
         /// <summary>
         /// Diagnoses the system 
         /// </summary>
-        private static void Diagnose()
+        private static bool Diagnose()
         {
             if (!Misc.HasAdminPriveleges())
             {
                 Printer.Print("\nThis application require administrator privileges.", ConsoleColor.DarkRed, ConsoleColor.White);
                 Printer.Print("To do so, right click on this application and select 'Run as administrator'.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
+                Misc.IsDone();
+                return false;
             }
 
             Printer.Print($"Admin Priveleges\t\t\t[ Yes ]");
 
-            if (!Misc.IsInternetConnected())
+            // Try internet connection
+            int internetReconnectAttempt = 10;
+            while (internetReconnectAttempt > 0)
+            {
+                if (!Misc.IsInternetConnected())
+                {
+                    Thread.Sleep(3000);
+                    internetReconnectAttempt--;
+                    Printer.Print("No Internet Connection. Retrying...");
+                }
+                else
+                {
+                    internetReconnectAttempt = -1;
+                }
+            }
+            if(internetReconnectAttempt == 0)
             {
                 Printer.Print("\nNo Internet Connection. Please ensure a stable internet connection to activate windows.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
+                Misc.IsDone();
+                return false;
             }
-
             Printer.Print("Internet Connection\t\t\t[ Connected ]");
-            Printer.Print($"OS Info\t\t\t\t\t[ {productData.Name} | {productData.Build} | {productData.Architecture} ]");
 
+            // OS Info
+            Printer.Print($"OS Info\t\t\t\t\t[ {productData.Name} | {productData.Build} | {productData.Architecture} ]");
             if (!Program.ignoreExistingActivation && Misc.IsSystemActivated())
             {
                 Printer.Print($"\n{productData.Name} is currently Activated", ConsoleColor.White, ConsoleColor.Black);
@@ -168,51 +217,13 @@ namespace WindowsActivator
                 Printer.Print($"Press the 'Enter' button to continue.", ConsoleColor.Black, ConsoleColor.DarkYellow);
                 if(Console.ReadKey().Key != ConsoleKey.Enter)
                 {
-                    IsDone();
+                    Misc.IsDone();
+                    return false;
                 }
             }
+            return true;
         }
 
 
-        /// <summary>
-        /// Checks for important System applications.
-        /// </summary>
-        private static void CheckOSApps()
-        {
-            GetSystemApplication("cmd.exe", Paths.Path.CMD);
-            GetSystemApplication("slmgr.vbs", Paths.Path.SLMGR);
-            GetSystemApplication("cscript.exe", Paths.Path.CScript);
-            GetSystemApplication("wmic.exe", Paths.Path.WMIC);
-        }
-
-        /// <summary>
-        /// Tries to get a system application and does all the printing, canceling or continuing.
-        /// </summary>
-        /// <param name="appName"></param>
-        /// <param name="path"></param>
-        private static void GetSystemApplication(string appName, Paths.Path path)
-        {
-            if (!Misc.GetSystemApplication(appName, out string pathToApp))
-            {
-                Printer.Print();
-                Printer.Print($"Unable to find {appName} in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
-                IsDone();
-            }
-            Paths.SetPath(path, pathToApp);
-            Printer.Print($"{appName}".PadRight(40) + "[ Found ]");
-        }
-
-        /// <summary>
-        /// Cleans up work space and waits for a key press to exit.
-        /// </summary>
-        private static void IsDone()
-        {
-            if (!Program.autoCloseOnIsDone)
-            {
-                Printer.Print("\nPress any key to Exit", new ConsoleColor(), ConsoleColor.DarkYellow);
-                Console.ReadKey();
-            }
-            Process.GetCurrentProcess().Kill();
-        }
     }
 }

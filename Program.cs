@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection;
-using System.Threading;
 using WindowsActivator.Classes;
 
 namespace WindowsActivator
 {
     public static class Program
     {
+        public static string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
         // Preferences
         public static bool ignoreDisclaimer = false; // Arg: -id
         public static bool ignoreExistingActivation = false; // Arg: -iea
@@ -16,41 +16,73 @@ namespace WindowsActivator
         // Starting point
         static void Main(string[] arguments)
         {
+            Console.SetWindowSize(100, 30);
+            Console.Clear();
+
             // Set working directory path
             Paths.SetPath(Paths.Path.AppDirectory, Environment.GetFolderPath(Environment.SpecialFolder.Windows) + @"\Windows Activator");
 
             // Arguments
             HandleArguments(arguments);
 
-            // Gets the version of the application.
-            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
             // Changes the title of the application.
-            Console.Title = $"Windows Activator v. {version} [Pre-Release]";
+            Console.Title = $"Windows Activator v. {version}";
 
-            // Disclaimer
-            if (!ignoreDisclaimer)
+            // Get Operation System Apps
+            Misc.CheckOSApps();
+
+            // Menu
+            while (true)
             {
-                // Showing the disclaimer.
-                Printer.Print("Disclaimer:\n", ConsoleColor.Black, ConsoleColor.Red);
-                Printer.Print("By using this Windows Activation application, you acknowledge and agree that the author of this software is\nnot responsible for any damages, including but not limited to data loss, system corruption, or any other issue\nthat may arise as a result of using this software.\n\nFurthermore, you agree to use this software at your own risk, and the author shall not be held liable for any\nconsequences that may result from its use.\n\nIf your system has been activated with a license key, this activator will replace it.\n\nThe author does not guarantee success or safety and cannot be held liable for any\npotential risks. The user assumes full responsibility for any risks associated with the use of this application.\n\nBy proceeding with the activation process, you confirm that you have read, understood,\nand agreed to the terms of this disclaimer.");
-                Printer.Print("\nPress the 'Enter' key to proceed with the activation process.", ConsoleColor.Black, ConsoleColor.Green);
+                Console.Clear();
 
-                // Checks for "Enter" Key
-                if (Console.ReadKey().Key == ConsoleKey.Enter)
+                // Init
+                Printer.Print("Please wait...", true);
+                bool systemActivated = Misc.IsSystemActivated();
+                bool schedulerInstalled = ScheduledReactivator.IsInstalled();
+                Console.Clear();
+
+                // Activation
+                Printer.Print("\n\t\t\tActivation\t\t\t\t", true, ConsoleColor.White, ConsoleColor.Black);
+                Printer.Print(systemActivated ? "Windows is activated" : "Windows is not activated", true, systemActivated ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed, ConsoleColor.White);
+                Printer.Print("\t\t\t\n", false, ConsoleColor.White, ConsoleColor.Black);
+
+                Printer.Print("\t\t[1]\tActivate Windows with Auto-Renewal");
+                Printer.Print("\t\t[2]\tActivate Windows");
+                Printer.Print("\t\t[3]\tUninstall Completely");
+
+                // Auto Renewal
+                Printer.Print("\n\t\t\tAuto-Renewal\t\t\t\t", true, ConsoleColor.White, ConsoleColor.Black);
+                Printer.Print(schedulerInstalled ? "Installed" : "Not Installed", true, schedulerInstalled ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed, ConsoleColor.White);
+                Printer.Print("\t\t\t\t\t\n", false, ConsoleColor.White, ConsoleColor.Black);
+
+                Printer.Print("\t\t[4]\tInstall Auto-Renewal");
+                Printer.Print("\t\t[5]\tUninstall Auto-Renewal");
+
+                // Manage Options
+                Printer.Print("\n\tOption:  ", true);
+                string key = Console.ReadLine();
+                switch(key)
                 {
-                    Console.Clear();
-                    Activator.Run();
-                    return;
+                    case "1":
+                        if(Activator.Install())
+                        {
+                            ScheduledReactivator.Install();
+                        }
+                        break;
+                    case "2":
+                        Activator.Install();
+                        break;
+                    case "3":
+                        Activator.Uninstall();
+                        break;
+                    case "4":
+                        ScheduledReactivator.Install();
+                        break;
+                    case "5":
+                        ScheduledReactivator.Uninstall();
+                        break;
                 }
-
-                // Exit application when "Enter" key was not pressed.
-                Printer.Print("\nNot agreed to disclaimer. Exiting...", ConsoleColor.Black, ConsoleColor.DarkYellow);
-                Thread.Sleep(3000);
-            }
-            else
-            {
-                Activator.Run();
             }
         }
 

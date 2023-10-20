@@ -95,7 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Automator.cs" />
+    <Compile Include="Classes\ScheduledReactivator.cs" />
     <Compile Include="Classes\CommandHandler.cs" />
     <Compile Include="Classes\GenericWindowsKeys.cs" />
     <Compile Include="Classes\KMS.cs" />
@@ -135,7 +135,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\automatorscript.vbs" />
+    <EmbeddedResource Include="Resources\run.vbs" />
     <Content Include="windows.ico" />
   </ItemGroup>
   <ItemGroup>

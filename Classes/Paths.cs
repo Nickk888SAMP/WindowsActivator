@@ -11,11 +11,11 @@
             AppDirectory
         }
 
-        private static string cmdPath;
-        private static string slmgrPath;
-        private static string cScriptPath;
-        private static string wmicPath;
-        private static string applicationWorkDirectory;
+        private static string cmdPath = null;
+        private static string slmgrPath = null;
+        private static string cScriptPath = null;
+        private static string wmicPath = null;
+        private static string applicationWorkDirectory = null;
 
         /// <summary>
         /// Sets the path.

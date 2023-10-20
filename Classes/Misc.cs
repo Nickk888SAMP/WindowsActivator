@@ -1,10 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Net.NetworkInformation;
-using System.Security.Policy;
 using System.Security.Principal;
-using System.Threading;
 using WindowsActivator.Classes;
 
 namespace WindowsActivator
@@ -122,16 +119,6 @@ namespace WindowsActivator
         }
 
         /// <summary>
-        /// Checks if it's a windows server.
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsWindowsServer()
-        {
-            string serverEditionFilePath = $@"{GetSystemRootDirectory()}\Servicing\Packages\Microsoft-Windows-Server*Edition~*.mum";
-            return File.Exists(serverEditionFilePath);
-        }
-
-        /// <summary>
         /// Gets the systems root directory. 
         /// </summary>
         /// <returns></returns>
@@ -185,5 +172,46 @@ namespace WindowsActivator
         {
             return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\ProductOptions", "OSProductPfn");
         }
+
+        /// <summary>
+        /// Checks for important System applications.
+        /// </summary>
+        public static void CheckOSApps()
+        {
+            GetSystemApplication("cmd.exe", Paths.Path.CMD);
+            GetSystemApplication("slmgr.vbs", Paths.Path.SLMGR);
+            GetSystemApplication("cscript.exe", Paths.Path.CScript);
+            GetSystemApplication("wmic.exe", Paths.Path.WMIC);
+        }
+
+        /// <summary>
+        /// Tries to get a system application and does all the printing, canceling or continuing.
+        /// </summary>
+        /// <param name="appName"></param>
+        /// <param name="path"></param>
+        public static void GetSystemApplication(string appName, Paths.Path path)
+        {
+            if (!GetSystemApplication(appName, out string pathToApp))
+            {
+                Printer.Print();
+                Printer.Print($"Unable to find {appName} in the system.", ConsoleColor.DarkRed, ConsoleColor.White);
+                IsDone();
+            }
+            Paths.SetPath(path, pathToApp);
+            Printer.Print($"{appName}".PadRight(40) + "[ Found ]");
+        }
+
+        /// <summary>
+        /// Cleans up work space and waits for a key press to exit.
+        /// </summary>
+        public static void IsDone()
+        {
+            if (!Program.autoCloseOnIsDone)
+            {
+                Printer.Print("\nPress any key to continue.", new ConsoleColor(), ConsoleColor.DarkYellow);
+                Console.ReadKey();
+            }
+        }
+
     }
 }
