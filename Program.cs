@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
+using WindowsActivator.Classes;
 
 namespace WindowsActivator
 {
@@ -11,27 +12,21 @@ namespace WindowsActivator
         public static bool ignoreDisclaimer = false; // Arg: -id
         public static bool ignoreExistingActivation = false; // Arg: -iea
         public static bool autoCloseOnIsDone = false; // Arg: -ac
-        public static bool noOutput = false; // Arg: -no
 
-        static void Main(string[] args)
+        // Starting point
+        static void Main(string[] arguments)
         {
+            // Set working directory path
+            Paths.SetPath(Paths.Path.AppDirectory, Environment.GetFolderPath(Environment.SpecialFolder.Windows) + @"\Windows Activator");
+
             // Arguments
-            foreach (string arg in args)
-            {
-                if(arg == "-id") ignoreDisclaimer = true;
-                else if(arg == "-iea") ignoreExistingActivation = true;
-                else if (arg == "-ac") autoCloseOnIsDone = true;
-                else if (arg == "-no") noOutput = true;
-            }
+            HandleArguments(arguments);
 
             // Gets the version of the application.
             string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             // Changes the title of the application.
             Console.Title = $"Windows Activator v. {version} [Pre-Release]";
-
-            // Activator 
-            Activator activator = new Activator();
 
             // Disclaimer
             if (!ignoreDisclaimer)
@@ -45,7 +40,7 @@ namespace WindowsActivator
                 if (Console.ReadKey().Key == ConsoleKey.Enter)
                 {
                     Console.Clear();
-                    activator.Run();
+                    Activator.Run();
                     return;
                 }
 
@@ -55,7 +50,24 @@ namespace WindowsActivator
             }
             else
             {
-                activator.Run();
+                Activator.Run();
+            }
+        }
+
+        /// <summary>
+        /// Handles the arguments
+        /// </summary>
+        /// <param name="arguments"></param>
+        private static void HandleArguments(string[] arguments)
+        {
+            foreach (string argument in arguments)
+            {
+                switch (argument)
+                {
+                    case "-id": ignoreDisclaimer = true; break;
+                    case "-iea": ignoreExistingActivation = true; break;
+                    case "-ac": autoCloseOnIsDone = true; break;
+                }
             }
         }
     }

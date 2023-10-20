@@ -6,10 +6,10 @@ using WindowsActivator.Classes;
 
 namespace WindowsActivator
 {
-    internal class Activator
+    public static class Activator
     {
         // Collects OS data.
-        ProductData productData = new ProductData(
+        static ProductData productData = new ProductData(
             Misc.GetWindowsBuild(),
             Misc.GetWindowsArch(),
             Misc.GetProductName(),
@@ -19,11 +19,8 @@ namespace WindowsActivator
         /// <summary>
         /// Runs the activation process.
         /// </summary>
-        public void Run()
+        public static void Run()
         {
-            // Set working directory path
-            Paths.SetPath(Paths.Path.WorkDirectory, Environment.GetFolderPath(Environment.SpecialFolder.Windows) + @"\Windows Activator");
-
             // Checks if the OS is supported.
             if (!Misc.IsOSSupported(productData.Build))
             {
@@ -62,7 +59,7 @@ namespace WindowsActivator
         /// <summary>
         /// Attemps to activate Windows.
         /// </summary>
-        private void Activate()
+        private static void Activate()
         {
             string output;
             string command;
@@ -129,7 +126,7 @@ namespace WindowsActivator
         /// <summary>
         /// Verifies the activation.
         /// </summary>
-        private void CheckActivation()
+        private static void CheckActivation()
         {
             if (Misc.IsSystemActivated())
             {
@@ -144,7 +141,7 @@ namespace WindowsActivator
         /// <summary>
         /// Diagnoses the system 
         /// </summary>
-        private void Diagnose()
+        private static void Diagnose()
         {
             if (!Misc.HasAdminPriveleges())
             {
@@ -180,7 +177,7 @@ namespace WindowsActivator
         /// <summary>
         /// Checks for important System applications.
         /// </summary>
-        private void CheckOSApps()
+        private static void CheckOSApps()
         {
             GetSystemApplication("cmd.exe", Paths.Path.CMD);
             GetSystemApplication("slmgr.vbs", Paths.Path.SLMGR);
@@ -193,7 +190,7 @@ namespace WindowsActivator
         /// </summary>
         /// <param name="appName"></param>
         /// <param name="path"></param>
-        private void GetSystemApplication(string appName, Paths.Path path)
+        private static void GetSystemApplication(string appName, Paths.Path path)
         {
             if (!Misc.GetSystemApplication(appName, out string pathToApp))
             {
@@ -208,7 +205,7 @@ namespace WindowsActivator
         /// <summary>
         /// Cleans up work space and waits for a key press to exit.
         /// </summary>
-        private void IsDone()
+        private static void IsDone()
         {
             if (!Program.autoCloseOnIsDone)
             {

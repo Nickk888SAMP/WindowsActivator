@@ -9,14 +9,14 @@ using WindowsActivator.Classes;
 
 namespace WindowsActivator
 {
-    static class Misc
+    public static class Misc
     {
         /// <summary>
         /// Checks if an URL is active by pinging.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        static public bool IsURLActive(string url)
+        public static bool IsURLActive(string url)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Timeout = 15000;
@@ -38,7 +38,7 @@ namespace WindowsActivator
         /// Checks if there's an internet connection pinging google.com
         /// </summary>
         /// <returns></returns>
-        static public bool IsInternetConnected()
+        public static bool IsInternetConnected()
         {
             return IsURLActive("http://www.google.com");
         }
@@ -47,7 +47,7 @@ namespace WindowsActivator
         /// Checks if the application has Administration priveleges
         /// </summary>
         /// <returns></returns>
-        static public bool HasAdminPriveleges()
+        public static bool HasAdminPriveleges()
         {
             bool hasAdmin = false;
             using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
@@ -64,7 +64,7 @@ namespace WindowsActivator
         /// <param name="appName"></param>
         /// <param name="pathToApp"></param>
         /// <returns></returns>
-        static public bool GetSystemApplication(string appName, out string pathToApp)
+        public static bool GetSystemApplication(string appName, out string pathToApp)
         {
             pathToApp = null;
             string[] paths = Environment.GetEnvironmentVariable("PATH").Split(';');
@@ -88,7 +88,7 @@ namespace WindowsActivator
         /// <param name="url"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        static public bool ReadFileFromURL(string url, out string content)
+        public static bool ReadFileFromURL(string url, out string content)
         {
             content = String.Empty;
             if(IsURLActive(url))
@@ -106,7 +106,7 @@ namespace WindowsActivator
         /// Gets the current windows Build.
         /// </summary>
         /// <returns></returns>
-        static public int GetWindowsBuild()
+        public static int GetWindowsBuild()
         {
             return Environment.OSVersion.Version.Build;
         }
@@ -116,7 +116,7 @@ namespace WindowsActivator
         /// </summary>
         /// <param name="buildNumber"></param>
         /// <returns></returns>
-        static public bool IsOSSupported(int buildNumber)
+        public static bool IsOSSupported(int buildNumber)
         {
             return buildNumber > 10240;
         }
@@ -125,7 +125,7 @@ namespace WindowsActivator
         /// Checks if it's a windows server.
         /// </summary>
         /// <returns></returns>
-        static public bool IsWindowsServer()
+        public static bool IsWindowsServer()
         {
             string serverEditionFilePath = $@"{GetSystemRootDirectory()}\Servicing\Packages\Microsoft-Windows-Server*Edition~*.mum";
             return File.Exists(serverEditionFilePath);
@@ -135,7 +135,7 @@ namespace WindowsActivator
         /// Gets the systems root directory. 
         /// </summary>
         /// <returns></returns>
-        static public string GetSystemRootDirectory()
+        public static string GetSystemRootDirectory()
         {
             return Environment.GetEnvironmentVariable("SystemRoot");
         }
@@ -144,7 +144,7 @@ namespace WindowsActivator
         /// Gets the architecture of the operating system.
         /// </summary>
         /// <returns></returns>
-        static public string GetWindowsArch()
+        public static string GetWindowsArch()
         {
             return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", "PROCESSOR_ARCHITECTURE");
         }
@@ -153,7 +153,7 @@ namespace WindowsActivator
         /// Checks if the system is activated.
         /// </summary>
         /// <returns></returns>
-        static public bool IsSystemActivated()
+        public static bool IsSystemActivated()
         {
             string output = CommandHandler.RunCommand($"{Paths.GetPath(Paths.Path.WMIC)} path SoftwareLicensingProduct where(LicenseStatus= '1' and PartialProductKey is not NULL) get Name /value 2> nul");
             return output.Contains("Windows");
@@ -163,7 +163,7 @@ namespace WindowsActivator
         /// Gets the OS product name.
         /// </summary>
         /// <returns></returns>
-        static public string GetProductName()
+        public static string GetProductName()
         {
             return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
         }
@@ -172,7 +172,7 @@ namespace WindowsActivator
         /// Gets the OS edition id.
         /// </summary>
         /// <returns></returns>
-        static public string GetEditionID()
+        public static string GetEditionID()
         {
             return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "EditionID");
         }
@@ -181,7 +181,7 @@ namespace WindowsActivator
         /// Gets the OS product Pfn
         /// </summary>
         /// <returns></returns>
-        static public string GetProductPfn()
+        public static string GetProductPfn()
         {
             return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\ProductOptions", "OSProductPfn");
         }

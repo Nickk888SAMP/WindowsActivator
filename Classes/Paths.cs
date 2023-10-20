@@ -1,6 +1,6 @@
 ﻿namespace WindowsActivator
 {
-    static class Paths
+    public static class Paths
     {
         public enum Path
         {
@@ -8,7 +8,7 @@
             SLMGR,
             CScript,
             WMIC,
-            WorkDirectory
+            AppDirectory
         }
 
         private static string cmdPath;
@@ -38,7 +38,7 @@
                 case Path.WMIC: 
                     wmicPath = fullPath;
                     break;
-                case Path.WorkDirectory: 
+                case Path.AppDirectory: 
                     applicationWorkDirectory = fullPath;
                     break;
             }
@@ -57,7 +57,7 @@
                 case Path.SLMGR: return slmgrPath;
                 case Path.CScript: return cScriptPath;
                 case Path.WMIC: return wmicPath;
-                case Path.WorkDirectory: return applicationWorkDirectory;
+                case Path.AppDirectory: return applicationWorkDirectory;
                 default: return null;
             }
         }

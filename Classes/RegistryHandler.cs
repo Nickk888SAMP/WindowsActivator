@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace WindowsActivator
 {
-    static class RegistryHandler
+    public static class RegistryHandler
     {
         public enum RegistryRootKey
         {
@@ -22,7 +22,7 @@ namespace WindowsActivator
         /// <param name="subKey"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        static public string GetRegistryStringValue(RegistryRootKey rootKey, string subKey, string key)
+        public static string GetRegistryStringValue(RegistryRootKey rootKey, string subKey, string key)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace WindowsActivator
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <param name="valueKind"></param>
-        static public void CreateRegistrySubKeyEntry(RegistryRootKey rootKey, string subKey, string name, object value, RegistryValueKind valueKind)
+        public static void CreateRegistrySubKeyEntry(RegistryRootKey rootKey, string subKey, string name, object value, RegistryValueKind valueKind)
         {
             try
             {

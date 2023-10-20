@@ -2,7 +2,7 @@
 
 namespace WindowsActivator
 {
-    static class Printer
+    public static class Printer
     {
         public static void Print(string text, ConsoleColor backgroundColor, ConsoleColor foregroundColor)
         {
@@ -11,9 +11,6 @@ namespace WindowsActivator
 
         public static void Print(string text, bool inline, ConsoleColor backgroundColor, ConsoleColor foregroundColor)
         {
-            if (Program.noOutput)
-                return;
-
             Console.ResetColor();
             Console.BackgroundColor = backgroundColor;
             Console.ForegroundColor = foregroundColor;
@@ -27,9 +24,6 @@ namespace WindowsActivator
 
         public static void Print(string text, bool inline)
         {
-            if (Program.noOutput)
-                return;
-
             Console.ResetColor();
 
             if (!inline)
