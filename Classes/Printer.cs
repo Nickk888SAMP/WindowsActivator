@@ -4,11 +4,6 @@ namespace WindowsActivator
 {
     public static class Printer
     {
-        public static void Print(string text, ConsoleColor backgroundColor, ConsoleColor foregroundColor)
-        {
-            Print(text, false, backgroundColor, foregroundColor);
-        }
-
         public static void Print(string text, bool inline, ConsoleColor backgroundColor, ConsoleColor foregroundColor)
         {
             Console.ResetColor();
@@ -32,14 +27,10 @@ namespace WindowsActivator
                 Console.Write(text);
         }
 
-        public static void Print(string text)
-        {
-            Print(text, false);
-        }
+        public static void Print(string text, ConsoleColor backgroundColor, ConsoleColor foregroundColor) => Print(text, false, backgroundColor, foregroundColor);
 
-        public static void Print()
-        {
-            Print(string.Empty);
-        }
+        public static void Print(string text) => Print(text, false);
+
+        public static void Print() => Print(string.Empty);
     }
 }

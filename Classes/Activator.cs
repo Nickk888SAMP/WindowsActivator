@@ -36,23 +36,17 @@ namespace WindowsActivator
             // Diagnoses the system before activate attempt
             Printer.Print("Diagnostic Tests", ConsoleColor.White, ConsoleColor.Black);
             if(!Diagnose())
-            {
                 return false;
-            }
 
             // Tries to activate the system
             Printer.Print("\nActivating", ConsoleColor.White, ConsoleColor.Black);
             if(!Activate())
-            {
                 return false;
-            }
 
             // Checks if the system has been activated
             Printer.Print("\nVerifying", ConsoleColor.White, ConsoleColor.Black);
             if(!CheckActivation())
-            {
                 return false;
-            }
 
             // Ends
             Misc.IsDone();
@@ -138,7 +132,7 @@ namespace WindowsActivator
                     if (output.Contains("0xC004F074"))
                     {
                         Printer.Print("[ Failed ]");
-                        KMS.RemoveKMSUrl(kmsUrl);
+                        KMS.RemoveUrl(kmsUrl);
                         continue;
                     }
 

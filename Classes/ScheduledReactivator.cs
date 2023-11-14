@@ -115,10 +115,7 @@ namespace WindowsActivator.Classes
         /// <summary>
         /// Removes the schedules Task if exists.
         /// </summary>
-        private static void RemoveScheduledTask()
-        {
-            TaskService.Instance.RootFolder.DeleteTask("Windows Activator", false);
-        }
+        private static void RemoveScheduledTask() => TaskService.Instance.RootFolder.DeleteTask("Windows Activator", false);
 
         /// <summary>
         /// Creates the scheduled Task.

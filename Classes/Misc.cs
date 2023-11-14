@@ -37,10 +37,7 @@ namespace WindowsActivator
         /// Checks if there's an internet connection pinging google.com
         /// </summary>
         /// <returns></returns>
-        public static bool IsInternetConnected()
-        {
-            return IsURLActive("http://www.google.com");
-        }
+        public static bool IsInternetConnected() => IsURLActive("http://www.google.com");
 
         /// <summary>
         /// Checks if the application has Administration priveleges
@@ -100,44 +97,6 @@ namespace WindowsActivator
             }
             return false;
         }
-
-        /// <summary>
-        /// Gets the current windows Build.
-        /// </summary>
-        /// <returns></returns>
-        public static int GetWindowsBuild()
-        {
-            return Environment.OSVersion.Version.Build;
-        }
-
-        /// <summary>
-        /// Checks if the OS is supported.
-        /// </summary>
-        /// <param name="buildNumber"></param>
-        /// <returns></returns>
-        public static bool IsOSSupported(int buildNumber)
-        {
-            return buildNumber > 10240;
-        }
-
-        /// <summary>
-        /// Gets the systems root directory. 
-        /// </summary>
-        /// <returns></returns>
-        public static string GetSystemRootDirectory()
-        {
-            return Environment.GetEnvironmentVariable("SystemRoot");
-        }
-
-        /// <summary>
-        /// Gets the architecture of the operating system.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetWindowsArch()
-        {
-            return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", "PROCESSOR_ARCHITECTURE");
-        }
-
         /// <summary>
         /// Checks if the system is activated.
         /// </summary>
@@ -146,33 +105,6 @@ namespace WindowsActivator
         {
             string output = CommandHandler.RunCommand($"{Paths.GetPath(Paths.Path.WMIC)} path SoftwareLicensingProduct where(LicenseStatus= '1' and PartialProductKey is not NULL) get Name /value 2> nul");
             return output.Contains("Windows");
-        }
-
-        /// <summary>
-        /// Gets the OS product name.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetProductName()
-        {
-            return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
-        }
-
-        /// <summary>
-        /// Gets the OS edition id.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetEditionID()
-        {
-            return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "EditionID");
-        }
-
-        /// <summary>
-        /// Gets the OS product Pfn
-        /// </summary>
-        /// <returns></returns>
-        public static string GetProductPfn()
-        {
-            return RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\ProductOptions", "OSProductPfn");
         }
 
         /// <summary>
@@ -218,6 +150,50 @@ namespace WindowsActivator
                 Process.GetCurrentProcess().Kill();
             }
         }
+
+        /// <summary>
+        /// Gets the current windows Build.
+        /// </summary>
+        /// <returns></returns>
+        public static int GetWindowsBuild() => Environment.OSVersion.Version.Build;
+
+        /// <summary>
+        /// Checks if the OS is supported.
+        /// </summary>
+        /// <param name="buildNumber"></param>
+        /// <returns></returns>
+        public static bool IsOSSupported(int buildNumber) => buildNumber > 10240;
+
+        /// <summary>
+        /// Gets the systems root directory. 
+        /// </summary>
+        /// <returns></returns>
+        public static string GetSystemRootDirectory() => Environment.GetEnvironmentVariable("SystemRoot");
+
+        /// <summary>
+        /// Gets the architecture of the operating system.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetWindowsArch() => RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", "PROCESSOR_ARCHITECTURE");
+
+        /// <summary>
+        /// Gets the OS product name.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetProductName() => RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
+
+        /// <summary>
+        /// Gets the OS edition id.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetEditionID() => RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "EditionID");
+
+        /// <summary>
+        /// Gets the OS product Pfn
+        /// </summary>
+        /// <returns></returns>
+        public static string GetProductPfn() => RegistryHandler.GetRegistryStringValue(RegistryHandler.RegistryRootKey.LOCAL_MACHINE, @"SYSTEM\CurrentControlSet\Control\ProductOptions", "OSProductPfn");
+
 
     }
 }

@@ -23,7 +23,7 @@ namespace WindowsActivator.Classes
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    AddKMSUrl(line);
+                    AddUrl(line);
                 }
             }
         }
@@ -47,18 +47,12 @@ namespace WindowsActivator.Classes
         /// Adds a URL to the KMS list.
         /// </summary>
         /// <param name="url"></param>
-        public static void AddKMSUrl(string url)
-        {
-            kmsUrls.Add(url);
-        }
+        public static void AddUrl(string url) => kmsUrls.Add(url);
 
         /// <summary>
         /// Removes a URL from the KMS list.
         /// </summary>
         /// <param name="url"></param>
-        public static void RemoveKMSUrl(string url)
-        {
-            kmsUrls.Remove(url);
-        }
+        public static void RemoveUrl(string url) => kmsUrls.Remove(url);
     }
 }
