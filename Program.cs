@@ -71,6 +71,7 @@ namespace WindowsActivator
                 {
                     key = selectedOption.ToString();
                 }
+                Console.Clear();
                 switch (key)
                 {
                     case "1":
@@ -83,10 +84,10 @@ namespace WindowsActivator
                         Activator.Uninstall();
                         break;
                     case "4":
-                        ScheduledReactivator.Install();
+                        ScheduledReactivator.Install(true);
                         break;
                     case "5":
-                        ScheduledReactivator.Uninstall();
+                        ScheduledReactivator.Uninstall(true);
                         break;
                 }
             }

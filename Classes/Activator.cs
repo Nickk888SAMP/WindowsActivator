@@ -22,8 +22,6 @@ namespace WindowsActivator
         /// </summary>
         public static bool Install(bool withAutoRenewal)
         {
-            Console.Clear();
-
             // Checks if the OS is supported.
             if (!Misc.IsOSSupported(productData.Build))
             {
@@ -50,7 +48,7 @@ namespace WindowsActivator
 
             // Autorenewal
             if(withAutoRenewal) 
-                ScheduledReactivator.Install();
+                ScheduledReactivator.Install(false);
 
             // Ends
             Misc.IsDone();
@@ -63,24 +61,21 @@ namespace WindowsActivator
         /// <returns></returns>
         public static bool Uninstall()
         {
-            Console.Clear();
-
             // Activation
             command = $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /upk";
             CommandHandler.RunCommand(command);
-            Printer.Print("Generic Product Key\t\t\t[ Removed ]");
+            Printer.Print("Generic Product Key\t\t\t\t[ Removed ]");
 
             command = $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /cpky";
             CommandHandler.RunCommand(command);
-            Printer.Print("Product key in registry\t\t\t[ Removed ]");
+            Printer.Print("Product key in registry\t\t\t\t[ Removed ]");
 
             command = $"{Paths.GetPath(Paths.Path.CScript)} {Paths.GetPath(Paths.Path.SLMGR)} /rearm";
             CommandHandler.RunCommand(command);
-            Printer.Print("Licensing status\t\t\t[ Reset ]");
+            Printer.Print("Licensing status\t\t\t\t[ Reset ]");
 
             // Task scheduler
-            ScheduledReactivator.Uninstall();
-            Printer.Print("Auto-Renewal\t\t\t\t[ Removed ]");
+            ScheduledReactivator.Uninstall(false);
 
             Printer.Print($"\nActivation uninstalled! Please restart the system for the changes to take effect.", ConsoleColor.DarkGreen, ConsoleColor.White);
             Printer.Print($"\nNote: Can't be re-activated until the system has been restarted!", ConsoleColor.DarkYellow, ConsoleColor.White);

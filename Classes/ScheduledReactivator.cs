@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using Microsoft.Win32.TaskScheduler;
 
 namespace WindowsActivator.Classes
@@ -11,10 +12,13 @@ namespace WindowsActivator.Classes
         /// Installs the activator files in the App's directory and creates a task in the Task Scheduler that runs the files every 7 days.
         /// </summary>
         /// <returns></returns>
-        public static bool Install()
+        public static bool Install(bool sleepOnEnd)
         {
             try
             {
+                Printer.Print("\nAuto-Renewal", ConsoleColor.White, ConsoleColor.Black);
+                Printer.Print($"Installing... \t\t\t\t", true);
+
                 // Paths
                 string appDirectory = Paths.GetPath(Paths.Path.AppDirectory);
                 string appFileName = AppDomain.CurrentDomain.FriendlyName;
@@ -23,12 +27,19 @@ namespace WindowsActivator.Classes
                 string combinedCopyFileToDir = $@"{appDirectory}\app.exe";
                 string combinedAutomatorScriptFileDir = $@"{appDirectory}\run.vbs";
                 string runScriptContent = GetAutomatorScriptContent("app.exe");
-                
+
+                // Windows Defender Exception
+                CommandHandler.RunCommand($@"powershell Add-MpPreference -ExclusionPath '{combinedCopyFileToDir}'");
+                CommandHandler.RunCommand($@"powershell Add-MpPreference -ExclusionPath '{combinedAutomatorScriptFileDir}'");
+
                 //Files
                 CreateFiles(combinedFileDir, combinedCopyFileToDir, combinedAutomatorScriptFileDir, runScriptContent);
 
                 //Task Scheduler
                 CreateScheduledTask(combinedAutomatorScriptFileDir);
+
+                Printer.Print("[ Success ]");
+                if(sleepOnEnd) Thread.Sleep(3000);
                 return true;
             }
             catch (Exception)
@@ -41,18 +52,33 @@ namespace WindowsActivator.Classes
         /// Removes all the Activators files in the Activator's directory and deletes the task from the Task Scheduler.
         /// </summary>
         /// <returns></returns>
-        public static bool Uninstall()
+        public static bool Uninstall(bool sleepOnEnd)
         {
             try
             {
+                Printer.Print("\nAuto-Renewal", ConsoleColor.White, ConsoleColor.Black);
+                Printer.Print($"Uninstalling... \t\t\t\t", true);
+
+                // Paths
+                string appDirectory = Paths.GetPath(Paths.Path.AppDirectory);
+                string combinedCopyFileToDir = $@"{appDirectory}\app.exe";
+                string combinedAutomatorScriptFileDir = $@"{appDirectory}\run.vbs";
+
                 // Files
                 if (Directory.Exists(Paths.GetPath(Paths.Path.AppDirectory)))
                 {
                     Directory.Delete(Paths.GetPath(Paths.Path.AppDirectory), true);
                 }
 
+                // Windows Defender Exception
+                CommandHandler.RunCommand($@"powershell Remove-MpPreference -ExclusionPath '{combinedCopyFileToDir}'");
+                CommandHandler.RunCommand($@"powershell Remove-MpPreference -ExclusionPath '{combinedAutomatorScriptFileDir}'");
+
                 // Scheduled Task
                 RemoveScheduledTask();
+
+                Printer.Print("[ Success ]");
+                if (sleepOnEnd) Thread.Sleep(3000);
                 return true;
             }
             catch(Exception)
