@@ -31,14 +31,6 @@ namespace WindowsActivator
         /// <param name="editionId"></param>
         /// <param name="productKey"></param>
         /// <returns></returns>
-        static public bool TryGetProductKey(string editionId, out string productKey)
-        {
-            if (editionIdToKey.TryGetValue(editionId, out productKey))
-            {
-                return true;
-            }
-            return false;
-        }
-
+        static public bool TryGetProductKey(string editionId, out string productKey) => editionIdToKey.TryGetValue(editionId, out productKey);
     }
 }

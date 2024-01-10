@@ -20,7 +20,7 @@ namespace WindowsActivator
         /// <summary>
         /// Runs the activation process.
         /// </summary>
-        public static bool Install()
+        public static bool Install(bool withAutoRenewal)
         {
             Console.Clear();
 
@@ -48,10 +48,19 @@ namespace WindowsActivator
             if(!CheckActivation())
                 return false;
 
+            // Autorenewal
+            if(withAutoRenewal) 
+                ScheduledReactivator.Install();
+
             // Ends
             Misc.IsDone();
             return true;
         }
+
+        /// <summary>
+        /// Removes the activation from Windows
+        /// </summary>
+        /// <returns></returns>
         public static bool Uninstall()
         {
             Console.Clear();

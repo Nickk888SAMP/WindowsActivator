@@ -6,10 +6,10 @@ namespace WindowsActivator.Classes
 {
     public static class KMS
     {
+        public static int UrlsCount { get { return kmsUrls.Count; } }
+
         private static readonly string kmsProviderslistUrl = @"http://raw.githubusercontent.com/Nickk888SAMP/WindowsActivator/master/KMSProviders";
         private static List<string> kmsUrls = new List<string>();
-
-        public static int UrlsCount { get { return kmsUrls.Count; } }
 
         /// <summary>
         /// Initializes the KMS URL List.
@@ -33,15 +33,7 @@ namespace WindowsActivator.Classes
         /// </summary>
         /// <param name="kmsUrl"></param>
         /// <returns></returns>
-        public static bool GetKMSProvider(out string kmsUrl)
-        {
-            kmsUrl = kmsUrls.FirstOrDefault();
-            if(kmsUrl == null)
-            {
-                return false;
-            }
-            return true;
-        }
+        public static bool GetKMSProvider(out string kmsUrl) => (kmsUrl = kmsUrls.FirstOrDefault()) != null;
 
         /// <summary>
         /// Adds a URL to the KMS list.

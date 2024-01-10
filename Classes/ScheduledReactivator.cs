@@ -62,15 +62,6 @@ namespace WindowsActivator.Classes
         }
 
         /// <summary>
-        /// Checks if the Scheduled reactivation is Installed/Active or not.
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsInstalled()
-        {
-            return Directory.Exists(Paths.GetPath(Paths.Path.AppDirectory)) && TaskService.Instance.GetTask("Windows Activator") != null;
-        }
-
-        /// <summary>
         /// Gets the content from the Resources script file and  replaces the *FILENAME* to the App's Name.
         /// </summary>
         /// <param name="appName"></param>
@@ -113,11 +104,6 @@ namespace WindowsActivator.Classes
         }
 
         /// <summary>
-        /// Removes the schedules Task if exists.
-        /// </summary>
-        private static void RemoveScheduledTask() => TaskService.Instance.RootFolder.DeleteTask("Windows Activator", false);
-
-        /// <summary>
         /// Creates the scheduled Task.
         /// </summary>
         /// <param name="startScriptPath"></param>
@@ -152,5 +138,15 @@ namespace WindowsActivator.Classes
             TaskService.Instance.RootFolder.RegisterTaskDefinition("Windows Activator", td);
         }
 
+        /// <summary>
+        /// Checks if the Scheduled reactivation is Installed/Active or not.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsInstalled() => Directory.Exists(Paths.GetPath(Paths.Path.AppDirectory)) && TaskService.Instance.GetTask("Windows Activator") != null;
+
+        /// <summary>
+        /// Removes the schedules Task if exists.
+        /// </summary>
+        private static void RemoveScheduledTask() => TaskService.Instance.RootFolder.DeleteTask("Windows Activator", false);
     }
 }

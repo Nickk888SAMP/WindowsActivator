@@ -74,13 +74,10 @@ namespace WindowsActivator
                 switch (key)
                 {
                     case "1":
-                        if(Activator.Install())
-                        {
-                            ScheduledReactivator.Install();
-                        }
+                        Activator.Install(true);
                         break;
                     case "2":
-                        Activator.Install();
+                        Activator.Install(false);
                         break;
                     case "3":
                         Activator.Uninstall();
